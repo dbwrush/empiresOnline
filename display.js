@@ -10,14 +10,11 @@ class Display {
 
     createDisplay() {
         this.frame = document.createElement("div");
-        this.frame.style.width = `${this.width}px`;
-        this.frame.style.height = `${this.height}px`;
-        this.frame.style.position = "relative";
+        this.frame.classList.add("frame");
 
         this.canvas = document.createElement("canvas");
         this.canvas.width = this.width;
         this.canvas.height = this.height;
-        this.canvas.style.border = "1px solid black";
 
         this.frame.appendChild(this.canvas);
         document.body.appendChild(this.frame);
