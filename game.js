@@ -74,7 +74,7 @@ class Game {
         };
 
         const loop = (timestamp) => {
-            now = performance.now();
+            now = timestamp;
             delta += (now - lastTime) / timePerTick;
             timer += now - lastTime;
             lastTime = now;
@@ -97,7 +97,7 @@ class Game {
             }
         };
 
-        loop();
+        loop(performance.now());
     }
 }
 
