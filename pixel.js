@@ -19,11 +19,10 @@ export default class Pixel {
         habitability: 'habitability',
     };
 
-    constructor(x, y, habitability, scale, gameState) {
+    constructor(x, y, habitability, gameState) {
         this.x = x;
         this.y = y;
         this.habitability = Math.max(habitability, 0);
-        this.scale = scale;
         this.need = 0;
         this.gameState = gameState;
         this.strength = habitability * 20;
@@ -33,15 +32,15 @@ export default class Pixel {
     }
 
     revolt() {
-        const old = this.getEmpire();
-        const e = new Empire(this.gameState, old.getName());
+        let old = this.getEmpire();
+        let e = new Empire(this.gameState, old.getName());
         e.addTerritory(this);
         this.age = 0;
         this.strength = this.habitability * 20;
         e.setEnemy(old, true, true);
         old.setEnemy(e, true, true);
         e.setCapital(this);
-        for (const p of this.neighbors) {
+        for (let p of this.neighbors) {
             if (p.getEmpire() === old && Math.random() < 0.5) {
                 e.addTerritory(p);
                 p.setStrength(p.getHabitability() * 20);
@@ -78,20 +77,20 @@ export default class Pixel {
 		return this.habitability > 0;
 	}
 
-    render(g, colorMode) {
+    render(g, colorMode, scale) {
         this.age += 1;
         if (this.age > Pixel.maxAge) {
             Pixel.maxAge = Math.ceil(this.age);
         }
         g.fillStyle = this.getColor(colorMode);
-        g.fillRect(this.x * this.scale, this.y * this.scale, this.scale, this.scale);
+        g.fillRect(this.x * scale, this.y * scale, scale, scale);		
     }
 
     strengthPhase() {
         if (!this.neighbors) {
             this.neighbors = this.gameState.getNeighbors(this.x, this.y);
         }
-        const empire = this.getEmpire();
+        let empire = this.getEmpire();
         if (empire) {
             this.strength += this.habitability;
             this.strength *= 0.99;
@@ -100,12 +99,12 @@ export default class Pixel {
 
     attackPhase() {
         this.borderFriction = 0;
-        const empire = this.getEmpire();
+        let empire = this.getEmpire();
         if (empire) {
             let target = null;
             let bestStrength = 0;
-            for (const p of this.neighbors) {
-                const pEmpire = p.getEmpire();
+            for (let p of this.neighbors) {
+                let pEmpire = p.getEmpire();
                 if (p.isHabitable()) {
                     if (!pEmpire && (this.strength - ((1 - p.habitability) * 3)) > bestStrength) {
                         target = p;
@@ -121,8 +120,8 @@ export default class Pixel {
                             } else {
                                 this.borderFriction += Math.abs(this.strength - p.getStrength()) * ((255 - empire.getCoopIso()) / 255);
                             }
-                            const ideoDiff = empire.ideoDifference(pEmpire);
-                            const coopIso = (empire.getCoopIso() + pEmpire.getCoopIso()) / 4;
+                            let ideoDiff = empire.ideoDifference(pEmpire);
+                            let coopIso = (empire.getCoopIso() + pEmpire.getCoopIso()) / 4;
                             if (ideoDiff < coopIso * Empire.getAllianceDifficulty()) {
                                 empire.setAlly(pEmpire);
                             }
@@ -166,9 +165,9 @@ export default class Pixel {
     needPhase() {
         this.friendlyNeighbors = [];
         this.need *= 0.9;
-        const empire = this.getEmpire();
+        let empire = this.getEmpire();
         if (empire) {
-            for (const p of this.neighbors) {
+            for (let p of this.neighbors) {
                 if (p.getEmpire() === empire || empire.getAllies().includes(p.getEmpire())) {
                     this.friendlyNeighbors.push(p);
                 } else {
@@ -194,7 +193,7 @@ export default class Pixel {
 
     needSpreadPhase() {
         let maxNeed = this.need;
-        for (const p of this.friendlyNeighbors) {
+        for (let p of this.friendlyNeighbors) {
             if (p.need > maxNeed) {
                 maxNeed = p.need;
             }
@@ -207,15 +206,15 @@ export default class Pixel {
     resourcePhase() {
         let totalNeed = this.need;
         let maxNeed = this.need;
-        for (const p of this.friendlyNeighbors) {
+        for (let p of this.friendlyNeighbors) {
             totalNeed += p.need;
             if (p.need > maxNeed) {
                 maxNeed = p.need;
             }
         }
         if (this.friendlyNeighbors.length > 0 && maxNeed > this.need) {
-            const factor = this.strength / totalNeed;
-            for (const p of this.friendlyNeighbors) {
+            let factor = this.strength / totalNeed;
+            for (let p of this.friendlyNeighbors) {
                 p.strength += p.need * factor;
             }
             this.strength *= this.need / totalNeed;
@@ -223,11 +222,11 @@ export default class Pixel {
     }
 
     spawnBoat() {
-        const empire = this.getEmpire();
+        let empire = this.getEmpire();
         if (!empire) {
             return;
         }
-        for (const p of this.neighbors) {
+        for (let p of this.neighbors) {
             if (!p.isHabitable()) {
                 this.gameState.addBoat(new Boat(empire, this.strength / 2, p.getX(), p.getY(), this.gameState, Math.random() * 8));
                 this.strength = this.strength / 2;
@@ -237,7 +236,7 @@ export default class Pixel {
     }
 
     spawnMissile() {
-        const empire = this.getEmpire();
+        let empire = this.getEmpire();
         if (!empire) {
             return;
         }
@@ -245,7 +244,7 @@ export default class Pixel {
     }
 
     spawnParatrooper() {
-        const empire = this.getEmpire();
+        let empire = this.getEmpire();
         if (!empire) {
             return;
         }
@@ -254,28 +253,30 @@ export default class Pixel {
     }
 
     getColor(colorMode) {
-        const empire = this.getEmpire();
-        if (empire && empire.getCapital() === this) {
-			console.log("I have a color");
-            return empire.getColor();
-        }
+        let empire = this.getEmpire();
+		if(empire != null) {
+			
+		}
         switch (colorMode) {
             case 'empire':
                 if (empire) {
-                    return empire.getColor();
+					let r = empire.getColor()[0];
+					let g = empire.getColor()[1];
+					let b = empire.getColor()[2];
+                    return `rgb(${r}, ${g}, ${b})`;
                 }
             case 'strength':
                 if (empire) {
                     let s = this.strength;
                     if (this.friendlyNeighbors.length > 0) {
-                        for (const p of this.friendlyNeighbors) {
+                        for (let p of this.friendlyNeighbors) {
                             s += p.getStrength();
                         }
                         s /= this.friendlyNeighbors.length;
                     }
-                    const r = (empire.getColor().r * s) / 255;
-                    const g = (empire.getColor().g * s) / 255;
-                    const b = (empire.getColor().b * s) / 255;
+                    let r = (empire.getColor()[0] * s) / 255;
+                    let g = (empire.getColor()[1] * s) / 255;
+                    let b = (empire.getColor()[2] * s) / 255;
                     return `rgb(${r}, ${g}, ${b})`;
                 }
             case 'ideology':
@@ -284,10 +285,10 @@ export default class Pixel {
                 }
             case 'need':
                 if (empire) {
-                    const n = this.need;
-                    const r = (empire.getColor().r * n) / 255;
-                    const g = (empire.getColor().g * n) / 255;
-                    const b = (empire.getColor().b * n) / 255;
+                    let n = this.need;
+                    let r = (empire.getColor()[0] * n) / 255;
+                    let g = (empire.getColor()[1] * n) / 255;
+                    let b = (empire.getColor()[2] * n) / 255;
                     return `rgb(${r}, ${g}, ${b})`;
                 }
             case 'age':
@@ -296,30 +297,30 @@ export default class Pixel {
                     if (a > Pixel.maxAge && Pixel.maxAge < 2048) {
                         a = Pixel.maxAge;
                     }
-                    const hue = (a / Pixel.maxAge) * 120;
-                    const saturation = 1.0;
-                    const brightness = 1.0;
-                    return `hsl(${hue}, ${saturation * 100}%, ${brightness * 100}%)`;
+                    let hue = (a / Pixel.maxAge) * 120;
+                    let saturation = 1.0;
+                    let brightness = 1.0;
+                    return `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
                 }
             case 'friction':
                 if (empire) {
-                    const f = this.borderFriction;
-                    const r = (empire.getColor().r * f) / 255;
-                    const g = (empire.getColor().g * f) / 255;
-                    const b = (empire.getColor().b * f) / 255;
+                    let f = this.borderFriction;
+                    let r = (empire.getColor()[0] * f) / 255;
+                    let g = (empire.getColor()[1] * f) / 255;
+                    let b = (empire.getColor()[2] * f) / 255;
                     return `rgb(${r}, ${g}, ${b})`;
                 }
             case 'alliance':
                 if (empire) {
-                    const g = this.friendlyNeighbors.length;
-                    const r = 8 - g;
+                    let g = this.friendlyNeighbors.length;
+                    let r = 8 - g;
                     return `rgb(${(r / 8) * 255}, ${(g / 8) * 255}, 0)`;
                 }
             case 'perspective':
                 if (empire) {
-                    const r = (8 - this.friendlyNeighbors.length) * 255;
-                    const g = 255 - (empire.ideoDifference(this.gameState.getPerspectiveEmpire()) / 3);
-                    const base = `rgb(${r / 8}, ${g / 8}, 0)`;
+                    let r = (8 - this.friendlyNeighbors.length) * 255;
+                    let g = 255 - (empire.ideoDifference(this.gameState.getPerspectiveEmpire()) / 3);
+                    let base = `rgb(${r / 8}, ${g / 8}, 0)`;
                     if (this.gameState.getPerspectiveEmpire() === empire) {
                         return 'rgb(255, 255, 0)';
                     }
@@ -329,8 +330,13 @@ export default class Pixel {
                     if (this.gameState.getPerspectiveEmpire().getAllies().includes(empire)) {
                         return 'rgb(0, 255, 255)';
                     }
-                    const baseColor = new Color((base.getRed() + r) / 2, (base.getGreen() + g) / 2, base.getBlue());
-                    return `rgb(${baseColor.r}, ${baseColor.g}, ${baseColor.b})`;
+					// Remove "rgb(" and ")" from the string
+					let rgbValues = base.substring(4, base.length - 1);
+
+					// Split the remaining string by comma and convert the values to numbers
+					let [red, green, blue] = rgbValues.split(',').map(value => parseInt(value));
+                    let baseColor = [(red + r) / 2, (green + g) / 2, blue];
+                    return `rgb(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]})`;
                 }
             case 'habitability':
                 if (this.habitability === 0) {
@@ -344,6 +350,11 @@ export default class Pixel {
                     return `rgb(0, ${this.habitability * 200}, 0)`;
                 }
         }
+		if (this.habitability === 0) {
+			return 'rgb(0, 0, 100)';
+		} else {
+			return `rgb(0, ${this.habitability * 200}, 0)`;
+		}
     }
 
     getAge() {

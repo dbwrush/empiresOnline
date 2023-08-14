@@ -24,7 +24,7 @@ class GameState extends State {
         this.remMissiles = [];
         this.paratroopers = [];
         this.remParatroopers = [];
-        this.colorMode = Pixel.ColorMode.empire;
+        this.colorMode = Pixel.ColorMode.strength;
         this.perspectiveEmpire = this.getEmpires()[0];
 		this.numEmpires = numEmpires;
 
@@ -35,12 +35,12 @@ class GameState extends State {
         this.habitablePixels = [];
 		while(this.habitablePixels.length < (width / this.scale) * (height / this.scale) / 2) {
 			this.habitablePixels = [];
-			this.genTerrain(width / this.scale, height / this.scale, this.scale);
+			this.genTerrain(width / this.scale, height / this.scale);
 		}
         this.genEmpires(this.numEmpires);
     }
 
-    genTerrain(width, height, scale) {
+    genTerrain(width, height) {
         console.log("Generating Terrain");
         this.pixels = new Array(width);
         const perlin = new PerlinNoiseGenerator(width, height, 0.01, 4);
@@ -52,7 +52,7 @@ class GameState extends State {
                 if (h < 0.4) {
                     h = 0;
                 }
-                const p = new Pixel(x, y, h, this.scale, this);
+                const p = new Pixel(x, y, h, this);
                 if (h > 0) {
                     this.habitablePixels.push(p);
                 }
@@ -282,7 +282,7 @@ class GameState extends State {
 	render(g) {
 		for (const pa of this.pixels) {
 			for (const p of pa) {
-				p.render(g, this.colorMode);
+				p.render(g, this.colorMode, this.scale);
 			}
 		}
 		for (const b of this.boats) {

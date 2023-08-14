@@ -24,7 +24,7 @@ export default class Boat {
             this.strength = 0;
         }
         if (t < 0) {
-            t += 8;
+            t += neighbors.length;
         }
         let target = neighbors[t];
 
