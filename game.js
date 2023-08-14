@@ -48,6 +48,10 @@ class Game {
 	getGameState() {
 		return this.gameState;
 	}
+	
+	setColorMode(colorMode) {
+		this.gameState.setColorMode(colorMode);
+	}
 
     gameLoop() {
         const desiredFps = 100;

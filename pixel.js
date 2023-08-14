@@ -281,7 +281,10 @@ export default class Pixel {
                 }
             case 'ideology':
                 if (empire) {
-                    return empire.getIdeologyColor();
+                    let r = empire.getIdeologyColor()[0];
+					let g = empire.getIdeologyColor()[1];
+					let b = empire.getIdeologyColor()[2];
+                    return `rgb(${r}, ${g}, ${b})`;
                 }
             case 'need':
                 if (empire) {

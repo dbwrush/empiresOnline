@@ -24,7 +24,7 @@ class GameState extends State {
         this.remMissiles = [];
         this.paratroopers = [];
         this.remParatroopers = [];
-        this.colorMode = Pixel.ColorMode.strength;
+        this.colorMode = Pixel.ColorMode.empire;
         this.perspectiveEmpire = this.getEmpires()[0];
 		this.numEmpires = numEmpires;
 
@@ -33,9 +33,11 @@ class GameState extends State {
 
     init(width, height) {
         this.habitablePixels = [];
-		while(this.habitablePixels.length < (width / this.scale) * (height / this.scale) / 2) {
+		const mapWidth = Math.floor(width / this.scale);
+		const mapHeight = Math.floor(height / this.scale);
+		while(this.habitablePixels.length < mapWidth * mapHeight / 2) {
 			this.habitablePixels = [];
-			this.genTerrain(width / this.scale, height / this.scale);
+			this.genTerrain(mapWidth, mapHeight);
 		}
         this.genEmpires(this.numEmpires);
     }
@@ -130,6 +132,10 @@ class GameState extends State {
 		neighbors.push(this.pixels[leftOne][y]);
 
 		return neighbors;
+	}
+	
+	setColorMode(colorMode) {
+		this.colorMode = colorMode;
 	}
 
 	tick() {

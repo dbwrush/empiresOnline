@@ -2,6 +2,7 @@ export default class PerlinNoiseGenerator {
     constructor(width, height, frequency, octaves) {
         this.width = width;
         this.height = height;
+		console.log("Using width: " + width + " and height " + height);
         this.frequency = frequency;
         this.octaves = octaves;
         this.noise = this.generateNoise();

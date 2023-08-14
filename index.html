@@ -18,13 +18,33 @@
     <title>Empire Simulation</title>
 </head>
 <body>
+	<div id="controls", style="width:100%;text-align:center"></div>
     <script type="module">
         // Import your JavaScript files
         import Game from './game.js';
+        import Pixel from './pixel.js';
 
         // Create an instance of the Game class
-        const game = new Game("Empire Simulation", 800, 600, 5, 100, 0.5);
+		
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+		
+		// Game will run in a canvas object of set width and height
+        const game = new Game("Empire Simulation", width, height, 8, 100, 0.5);
+		
+		const controls = document.getElementById("controls");
+		
+		Object.entries(Pixel.ColorMode).map(obj => {
+			const key   = obj[0];
+			const value = obj[1];
 
+			let button = document.createElement("button");
+			button.innerText = key;
+			button.onclick = () => game.setColorMode(value);
+			
+			controls.appendChild(button);
+		});
+		
         // Start the game loop
         game.start();
     </script>

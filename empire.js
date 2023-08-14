@@ -268,7 +268,7 @@ export default class Empire {
 
     getIdeologyColor() {
         const colors = this.ideology.map(value => (value > 255 ? 255 : value));
-        return new Color(colors[0], colors[1], colors[2]);
+        return [colors[0], colors[1], colors[2]];
     }
 
     getAllies() {
