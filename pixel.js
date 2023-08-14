@@ -223,7 +223,7 @@ export default class Pixel {
 
     spawnBoat() {
         let empire = this.getEmpire();
-        if (!empire) {
+        if (empire == null) {
             return;
         }
         for (let p of this.neighbors) {
@@ -237,7 +237,7 @@ export default class Pixel {
 
     spawnMissile() {
         let empire = this.getEmpire();
-        if (!empire) {
+        if (empire == null) {
             return;
         }
         this.gameState.addMissile(new Missile(empire, this.x, this.y, this.gameState, this.strength));
@@ -245,7 +245,7 @@ export default class Pixel {
 
     spawnParatrooper() {
         let empire = this.getEmpire();
-        if (!empire) {
+        if (empire == null) {
             return;
         }
         this.gameState.addParatrooper(new Paratrooper(empire, this.x, this.y, this.gameState, this.strength * 0.9));
@@ -254,9 +254,6 @@ export default class Pixel {
 
     getColor(colorMode) {
         let empire = this.getEmpire();
-		if(empire != null) {
-			
-		}
         switch (colorMode) {
             case 'empire':
                 if (empire) {

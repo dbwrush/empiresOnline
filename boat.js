@@ -69,8 +69,11 @@ export default class Boat {
         }
     }
 
-    render(g, scale) {
-        g.fillStyle = this.empire.getColor();
-        g.fillRect(this.x * scale, this.y * scale, scale, scale);
+    render(gr, scale) {
+		let r = this.empire.getColor()[0];
+		let g = this.empire.getColor()[1];
+		let b = this.empire.getColor()[2];
+        gr.fillStyle = `rgb(${r}, ${g}, ${b})`;
+        gr.fillRect(this.x * scale, this.y * scale, scale, scale);
     }
 }
