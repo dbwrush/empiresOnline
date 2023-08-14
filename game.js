@@ -1,7 +1,6 @@
 // game.js
 
 import Display from './display.js'; // Make sure you have the correct path
-import KeyManager from './key-manager.js'; // Make sure you have the correct path
 import MouseManager from './mouse-manager.js'; // Make sure you have the correct path
 import GameState from './game-state.js'; // Make sure you have the correct path
 import State from './state.js'; // Make sure you have the correct path
@@ -14,7 +13,6 @@ class Game {
         this.numEmpires = numEmpires;
         this.warThreshold = warThreshold;
         this.scale = scale;
-        this.keyManager = new KeyManager();
         this.mouseManager = null; // Initialize this later in the init method
         this.display = null; // Initialize this later in the init method
         this.gameState = null; // Initialize this later in the init method
@@ -25,8 +23,7 @@ class Game {
 
     init() {
         this.display = new Display(this.title, this.width, this.height);
-        this.display.getFrame().addEventListener("keydown", this.keyManager.onKeyDown);
-        this.gameState = new GameState(this, this.width, this.height, this.scale, this.numEmpires, this.warThreshold, this.keyManager);
+        this.gameState = new GameState(this, this.width, this.height, this.scale, this.numEmpires, this.warThreshold);
         this.mouseManager = new MouseManager(this.display.getCanvas(), this);
         State.setCurrentState(this.gameState);
     }

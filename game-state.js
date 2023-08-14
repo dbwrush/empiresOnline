@@ -9,10 +9,9 @@ import TerritoryManager from './territory-manager.js';
 import PerlinNoiseGenerator from './perlin-noise-generator.js';
 
 class GameState extends State {
-    constructor(game, width, height, scale, numEmpires, warThreshold, km) {
+    constructor(game, width, height, scale, numEmpires, warThreshold) {
         super(game);
         console.log("Switched to GameState");
-        this.km = km;
         this.warThreshold = warThreshold;
         this.scale = scale;
         this.tm = new TerritoryManager();
@@ -144,42 +143,6 @@ class GameState extends State {
 		}
 		if (!this.tm.getEmpires().includes(this.perspectiveEmpire)) {
 			this.perspectiveEmpire = this.tm.getEmpires()[0];
-		}
-		if (this.km.isKeyPressed(KeyEvent.VK_1)) {
-			console.log("Switching to empire view");
-			this.colorMode = Pixel.ColorMode.empire;
-		}
-		if (this.km.isKeyPressed(KeyEvent.VK_2)) {
-			console.log("Switching to strength view");
-			this.colorMode = Pixel.ColorMode.strength;
-		}
-		if (this.km.isKeyPressed(KeyEvent.VK_3)) {
-			console.log("Switching to ideology view");
-			this.colorMode = Pixel.ColorMode.ideology;
-		}
-		if (this.km.isKeyPressed(KeyEvent.VK_4)) {
-			console.log("Switching to need view");
-			this.colorMode = Pixel.ColorMode.need;
-		}
-		if (this.km.isKeyPressed(KeyEvent.VK_5)) {
-			console.log("Switching to age view");
-			this.colorMode = Pixel.ColorMode.age;
-		}
-		if (this.km.isKeyPressed(KeyEvent.VK_6)) {
-			console.log("Switching to friction view");
-			this.colorMode = Pixel.ColorMode.friction;
-		}
-		if (this.km.isKeyPressed(KeyEvent.VK_7)) {
-			console.log("Switching to alliance view");
-			this.colorMode = Pixel.ColorMode.alliance;
-		}
-		if (this.km.isKeyPressed(KeyEvent.VK_8)) {
-			console.log("Switching to perspective view");
-			this.colorMode = Pixel.ColorMode.perspective;
-		}
-		if (this.km.isKeyPressed(KeyEvent.VK_9)) {
-			console.log("Switching to habitability view");
-			this.colorMode = Pixel.ColorMode.habitability;
 		}
 		const empires = this.tm.getEmpires();
 		empires.sort(() => Math.random() - 0.5); // Shuffle the empires
