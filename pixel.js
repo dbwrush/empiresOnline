@@ -294,7 +294,7 @@ export default class Pixel {
             case 'age':
                 if (empire) {
                     let a = this.age;
-                    if (a > Pixel.maxAge && Pixel.maxAge < 2048) {
+                    if (a > Pixel.maxAge && Pixel.maxAge < 256) {
                         a = Pixel.maxAge;
                     }
                     let hue = (a / Pixel.maxAge) * 120;

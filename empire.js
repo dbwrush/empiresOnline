@@ -103,15 +103,15 @@ export default class Empire {
 
     crisisChance() {
         const p = this.getTerritory()[(Math.random() * this.getTerritory().length) | 0];
-        if (!p) {
+        if (!p) {//should never happen, but just in case.
             this.removeTerritory(null);
         } else {
-            if (Math.random() < 0.1) {
+            if (Math.random() < 0.1) {//10% chance of a revolution spawning somewhere in the empire.
                 this.setEnemy(p.revolt(), true, true);
-            } else if (Math.random() < 0.3) {
+            } else if (Math.random() < 0.3) {//30% chance of attempting to merge with an allied empire.
                 for (const e of this.allies) {
                     if (this.ideoDifference(e) < (this.getCoopIso() + e.getCoopIso()) * (4 * Math.random()) * this.mergeDifficulty) {
-                        if (this.getTerritory().length > e.getTerritory().length) {
+                        if (this.getTerritory().length > e.getTerritory().length) {//smaller empire always merges into larger one
                             e.mergeInto(this);
                         } else {
                             this.mergeInto(e);
@@ -124,7 +124,7 @@ export default class Empire {
         }
     }
 
-    puppet(e) {
+    puppet(e) {//empire's ideology shifts to become more like e. 
         this.ideology[0] = (this.ideology[0] + e.ideology[0]) / 2;
         this.ideology[1] = (this.ideology[1] + e.ideology[1]) / 2;
         this.ideology[2] = (this.ideology[2] + e.ideology[2]) / 2;
