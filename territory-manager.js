@@ -55,12 +55,14 @@ export default class TerritoryManager {
         return this.empireToPixelsMap.get(empire) || [];
     }
 
+	//Adds an empire to the map without giving it territory. This is unused.
     addEmpire(empire) {
         if (!this.empireToPixelsMap.has(empire)) {
             this.empireToPixelsMap.set(empire, []);
         }
     }
 
+	//Removes an empire from the sim entirely. This may become unused in the future.
     removeEmpire(empire) {
         const pixelList = this.empireToPixelsMap.get(empire);
         if (pixelList) {
