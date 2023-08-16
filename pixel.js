@@ -173,12 +173,12 @@ export default class Pixel {
                 } else {
                     if (p.isHabitable()) {
                         if (empire.getEnemies().includes(p.getEmpire())) {
-                            this.need += 63;
+                            this.need += 127;
                         } else {
                             this.need += 7;
                         }
                     } else {
-                        this.need += 3;
+                        this.need += 1;
                     }
                 }
             }
@@ -294,7 +294,7 @@ export default class Pixel {
             case 'age':
                 if (empire) {
                     let a = this.age;
-                    if (a > Pixel.maxAge && Pixel.maxAge < 256) {
+                    if (a > Pixel.maxAge && Pixel.maxAge < 64) {
                         a = Pixel.maxAge;
                     }
                     let hue = (a / Pixel.maxAge) * 120;
