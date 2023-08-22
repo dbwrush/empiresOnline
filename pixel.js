@@ -271,10 +271,10 @@ export default class Pixel {
                         }
                         s /= this.friendlyNeighbors.length;
                     }
-                    let r = (empire.getColor()[0] * s) / 255;
-                    let g = (empire.getColor()[1] * s) / 255;
-                    let b = (empire.getColor()[2] * s) / 255;
-                    return `rgb(${r}, ${g}, ${b})`;
+                    let hue = empire.getColor();
+                    let saturation = 1.0;
+                    let brightness = strength / 255;
+                    return `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
                 }
             case 'ideology':
                 if (empire) {
@@ -286,10 +286,10 @@ export default class Pixel {
             case 'need':
                 if (empire) {
                     let n = this.need;
-                    let r = (empire.getColor()[0] * n) / 255;
-                    let g = (empire.getColor()[1] * n) / 255;
-                    let b = (empire.getColor()[2] * n) / 255;
-                    return `rgb(${r}, ${g}, ${b})`;
+                    let hue = empire.getColor();
+                    let saturation = 1.0;
+                    let brightness = need / 255;
+                    return `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
                 }
             case 'age':
                 if (empire) {
@@ -305,10 +305,10 @@ export default class Pixel {
             case 'friction':
                 if (empire) {
                     let f = this.borderFriction;
-                    let r = (empire.getColor()[0] * f) / 255;
-                    let g = (empire.getColor()[1] * f) / 255;
-                    let b = (empire.getColor()[2] * f) / 255;
-                    return `rgb(${r}, ${g}, ${b})`;
+                    let hue = empire.getColor();
+                    let saturation = 1.0;
+                    let brightness = f / 255;
+                    return `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
                 }
             case 'alliance':
                 if (empire) {
