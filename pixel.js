@@ -288,7 +288,7 @@ export default class Pixel {
                     let n = this.need;
                     let hue = empire.getColor();
                     let saturation = 1.0;
-                    let brightness = need / 255;
+                    let brightness = this.need / 255;
                     return `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
                 }
             case 'age':
