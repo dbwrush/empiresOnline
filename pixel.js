@@ -257,10 +257,10 @@ export default class Pixel {
         switch (colorMode) {
             case 'empire':
                 if (empire) {
-					let r = empire.getColor()[0];
-					let g = empire.getColor()[1];
-					let b = empire.getColor()[2];
-                    return `rgb(${r}, ${g}, ${b})`;
+                    let hue = empire.getColor();
+                    let saturation = 1.0;
+                    let brightness = 1.0;
+                    return `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
                 }
             case 'strength':
                 if (empire) {
