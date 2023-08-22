@@ -4,7 +4,7 @@ import Boat from './boat.js';
 import Paratrooper from './paratrooper.js';
 
 export default class Pixel {
-    static maxAge = 64;
+    static maxAge = 512;
 	static gameState;
 	
 	static ColorMode = {
