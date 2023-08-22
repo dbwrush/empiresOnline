@@ -79,7 +79,7 @@ export default class Pixel {
 
     render(g, colorMode, scale) {
         this.age += 1;
-        if (this.age > Pixel.maxAge) {
+        if (this.age > Pixel.maxAge && Pixel.maxAge < 64) {
             Pixel.maxAge = Math.ceil(this.age);
         }
         g.fillStyle = this.getColor(colorMode);
@@ -183,7 +183,7 @@ export default class Pixel {
                 }
             }
             if (empire.getCapital() === this) {
-                this.need += 7;
+                this.need += 2;
             }
             if (this.need > 255) {
                 this.need = 255;
