@@ -14,9 +14,9 @@ export default class Empire {
             ? EmpireNameGenerator.generateEmpireName(this.ideology[0], this.ideology[1], this.ideology[2], oldName.split(" ")[oldName.split(" ").length - 1])
             : EmpireNameGenerator.generateEmpireName(this.ideology[0], this.ideology[1], this.ideology[2], null);
 
-	r = Math.random() * 256;
-	g = Math.random() * (256 - r);
-	b = 256 - r - g;
+	const r = Math.random() * 256;
+	const g = Math.random() * (256 - r);
+	const b = 256 - r - g;
         this.color = [
             r, g, b
         ];
