@@ -70,10 +70,10 @@ export default class Boat {
     }
 
     render(gr, scale) {
-		let r = this.empire.getColor()[0];
-		let g = this.empire.getColor()[1];
-		let b = this.empire.getColor()[2];
-        gr.fillStyle = `rgb(${r}, ${g}, ${b})`;
+		let hue = empire.getColor();
+		let saturation = 1.0;
+		let brightness = 1.0;
+        gr.fillStyle = `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
         gr.fillRect(this.x * scale, this.y * scale, scale, scale);
     }
 }
