@@ -4,7 +4,7 @@ import Boat from './boat.js';
 import Paratrooper from './paratrooper.js';
 
 export default class Pixel {
-    static maxAge = 0;
+    static maxAge = 64;
 	static gameState;
 	
 	static ColorMode = {
@@ -79,12 +79,6 @@ export default class Pixel {
 
     render(g, colorMode, scale) {
         this.age += 1;
-        if (this.age > Pixel.maxAge) {
-            Pixel.maxAge = Math.ceil(this.age);
-			if(Pixel.maxAge > 64) {
-				Pixel.maxAge > 64;
-			}
-        }
         g.fillStyle = this.getColor(colorMode);
         g.fillRect(this.x * scale, this.y * scale, scale, scale);		
     }
