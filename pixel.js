@@ -98,6 +98,9 @@ export default class Pixel {
         this.borderFriction = 0;
         let empire = this.getEmpire();
         if (empire) {
+			if(this.friendlyNeighbors.length == this.neighbors.length) {
+				return;
+			}
             let target = null;
             let bestStrength = 0;
             for (let p of this.neighbors) {
