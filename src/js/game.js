@@ -1,7 +1,7 @@
 // game.js
 
-import Display from './display.js'; // Make sure you have the correct path
-import MouseManager from './mouse-manager.js'; // Make sure you have the correct path
+import Display from './utilities/display.js'; // Make sure you have the correct path
+import MouseManager from './utilities/mouse-manager.js'; // Make sure you have the correct path
 import GameState from './game-state.js'; // Make sure you have the correct path
 import State from './state.js'; // Make sure you have the correct path
 
@@ -26,6 +26,11 @@ class Game {
         this.gameState = new GameState(this, this.width, this.height, this.scale, this.numEmpires, this.warThreshold);
         this.mouseManager = new MouseManager(this.display.getCanvas(), this);
         State.setCurrentState(this.gameState);
+
+        window.addEventListener("resize", (event) => {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        });
     }
 
     start() {
@@ -44,10 +49,6 @@ class Game {
 	
 	getGameState() {
 		return this.gameState;
-	}
-	
-	setColorMode(colorMode) {
-		this.gameState.setColorMode(colorMode);
 	}
 
     gameLoop() {
@@ -100,6 +101,8 @@ class Game {
 
         loop(performance.now());
     }
+
+    
 }
 
 // Export the Game class to be imported in other modules

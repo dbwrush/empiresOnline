@@ -1,4 +1,4 @@
-import EmpireNameGenerator from './empire-name-generator.js';
+import EmpireNameGenerator from '../utilities/empire-name-generator.js';
 
 export default class Empire {
     constructor(gameState, oldName) {

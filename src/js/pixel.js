@@ -1,7 +1,7 @@
-import Empire from './empire.js';
-import Missile from './missile.js';
-import Boat from './boat.js';
-import Paratrooper from './paratrooper.js';
+import Empire from './entities/empire.js';
+import Missile from './entities/missile.js';
+import Boat from './entities/boat.js';
+import Paratrooper from './entities/paratrooper.js';
 
 export default class Pixel {
     static maxAge = 512;

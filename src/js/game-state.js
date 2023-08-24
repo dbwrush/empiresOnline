@@ -1,12 +1,12 @@
 // game-state.js
 import State from './state.js'; // Import the base State class
 import Pixel from './pixel.js'; // Import the required classes
-import Boat from './boat.js';
-import Missile from './missile.js';
-import Paratrooper from './paratrooper.js';
-import Empire from './empire.js';
-import TerritoryManager from './territory-manager.js';
-import PerlinNoiseGenerator from './perlin-noise-generator.js';
+import Boat from './entities/boat.js';
+import Missile from './entities/missile.js';
+import Paratrooper from './entities/paratrooper.js';
+import Empire from './entities/empire.js';
+import TerritoryManager from './utilities/territory-manager.js';
+import PerlinNoiseGenerator from './utilities/perlin-noise-generator.js';
 
 class GameState extends State {
     constructor(game, width, height, scale, numEmpires, warThreshold) {
