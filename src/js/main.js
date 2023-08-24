@@ -1,6 +1,6 @@
 // main.js
 
-import Game from '/src/js/game.js';
+import Game from './game.js';
 
 class Main {
     static main() {
