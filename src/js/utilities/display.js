@@ -1,7 +1,7 @@
 // display.js
 
-import Pixel from '/src/js/pixel.js';
-import State from '/src/js/state.js';
+import Pixel from '../pixel.js';
+import State from '../state.js';
 
 class Display {
     constructor(title, width, height) {
