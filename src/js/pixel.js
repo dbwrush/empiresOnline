@@ -278,7 +278,7 @@ export default class Pixel {
                 }
             case 'ideology':
                 if (empire) {
-					let color = rybToRgb(empire.getIdeologyColor());
+					let color = this.rybToRgb(empire.getIdeologyColor());
                     return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
                 }
             case 'need':
