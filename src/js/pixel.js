@@ -40,14 +40,21 @@ export default class Pixel {
         e.setEnemy(old, true, true);
         old.setEnemy(e, true, true);
         e.setCapital(this);
-        for (let p of this.neighbors) {
-            if (p.getEmpire() === old) {
-                e.addTerritory(p);
-                p.setStrength((p.getStrength() + p.getHabitability()) * 10);
-            }
-        }
+        this.recruitNeighborsToRevolt(old);
         return e;
     }
+	
+	recruitNeighborsToRevolt(old) {
+		let e = this.getEmpire()
+		for(let p of this.neighbors) {
+			if(p.getEmpire() == old && Math.random() < 0.3) {
+				e.addTerritory(p);
+				p.setStrength((p.getStrength() + p.getHabitability()) * 2);
+				p.recruitNeighborsToRevolt(old);
+				p.setAge(0);
+			}
+		}
+	}
 
     getEmpire() {
         return this.gameState.getTerritoryManager().getEmpireForPixel(this);
@@ -222,6 +229,7 @@ export default class Pixel {
     }
 
     spawnBoat() {
+		return;
         let empire = this.getEmpire();
         if (empire == null) {
             return;
@@ -236,6 +244,7 @@ export default class Pixel {
     }
 
     spawnMissile() {
+		return;
         let empire = this.getEmpire();
         if (empire == null) {
             return;
@@ -244,6 +253,7 @@ export default class Pixel {
     }
 
     spawnParatrooper() {
+		return;
         let empire = this.getEmpire();
         if (empire == null) {
             return;

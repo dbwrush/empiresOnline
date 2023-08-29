@@ -26,7 +26,7 @@ export default class Empire {
         if (this.gameState.getEmpireForPixel(this.capital) !== this) {
             if (Math.random() < 0.3 && this.getTerritory().length > 0) {
                 this.crisisChance();
-            } else if (Math.random() < 0.7) {
+            } else if (Math.random() < 0.3) {
                 this.puppet(this.gameState.getEmpireForPixel(this.capital));
             }
             if (this.getTerritory().length > 0) {
@@ -38,7 +38,6 @@ export default class Empire {
         }
         if (this.maxSize > 0 && Math.random() < (this.maxSize - this.getTerritory().length) / this.getTerritory().length && this.getTerritory().length > 0) {
             this.crisisChance();
-			this.maxSize = this.getTerritory().length;
         }
 
         if (this.getTerritory().length > this.maxSize) {
@@ -94,7 +93,7 @@ export default class Empire {
         if (!p) {//should never happen, but just in case.
             this.removeTerritory(null);
         } else {
-            if (Math.random() < 0.1) {//10% chance of a revolution spawning somewhere in the empire.
+            if (Math.random() < 0.2 && this.getTerritory.length > 20) {//20% chance of a revolution spawning somewhere in the empire.
                 this.setEnemy(p.revolt(), true, true);
             } else if (Math.random() < 0.3) {//30% chance of attempting to merge with an allied empire.
                 for (const e of this.allies) {
@@ -110,6 +109,7 @@ export default class Empire {
                 }
             }
         }
+		this.maxSize = this.getTerritory().length;
     }
 
     puppet(e) {//empire's ideology shifts to become more like e. 
