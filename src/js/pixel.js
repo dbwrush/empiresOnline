@@ -229,7 +229,6 @@ export default class Pixel {
     }
 
     spawnBoat() {
-		return;
         let empire = this.getEmpire();
         if (empire == null) {
             return;
@@ -244,7 +243,6 @@ export default class Pixel {
     }
 
     spawnMissile() {
-		return;
         let empire = this.getEmpire();
         if (empire == null) {
             return;
@@ -253,7 +251,6 @@ export default class Pixel {
     }
 
     spawnParatrooper() {
-		return;
         let empire = this.getEmpire();
         if (empire == null) {
             return;
