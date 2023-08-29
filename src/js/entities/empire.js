@@ -23,15 +23,6 @@ export default class Empire {
         if (this.getTerritory().length === 0) {
             return;
         }
-        if (this.enemies.length === 0 && Math.random() < 0.01) {
-            this.ideology[0] *= 0.9;
-        }
-        if (Math.random() < 0.01 * this.allies.length) {
-            this.ideology[0] *= 1.1;
-            if (this.ideology[0] > 255) {
-                this.ideology[0] = 255;
-            }
-        }
         if (this.gameState.getEmpireForPixel(this.capital) !== this) {
             if (Math.random() < 0.3 && this.getTerritory().length > 0) {
                 this.crisisChance();

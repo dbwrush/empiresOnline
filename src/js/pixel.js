@@ -36,14 +36,14 @@ export default class Pixel {
         let e = new Empire(this.gameState, old.getName());
         e.addTerritory(this);
         this.age = 0;
-        this.strength = (this.strength + this.habitability) * 10;
+        this.strength = (this.strength + this.habitability) * 20;
         e.setEnemy(old, true, true);
         old.setEnemy(e, true, true);
         e.setCapital(this);
         for (let p of this.neighbors) {
-            if (p.getEmpire() === old && Math.random() < 0.5) {
+            if (p.getEmpire() === old) {
                 e.addTerritory(p);
-                p.setStrength((p.getStrength() + p.getHabitability()) * 5);
+                p.setStrength((p.getStrength() + p.getHabitability()) * 10);
             }
         }
         return e;
@@ -379,9 +379,9 @@ export default class Pixel {
 	  g2 = Math.min(g2, 255);
 
 	  let rgb = [
-		r2 * 255,
-		g2 * 255,
-		b1 * 255
+		r2,
+		g2,
+		b1
 	  ];
 
 	  return rgb;
