@@ -278,10 +278,8 @@ export default class Pixel {
                 }
             case 'ideology':
                 if (empire) {
-                    let r = empire.getIdeologyColor()[0];
-					let g = empire.getIdeologyColor()[1];
-					let b = empire.getIdeologyColor()[2];
-                    return `rgb(${r}, ${g}, ${b})`;
+					let color = rybToRgb(empire.getIdeologyColor());
+                    return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
                 }
             case 'need':
                 if (empire) {
@@ -364,4 +362,29 @@ export default class Pixel {
     setAge(age) {
         this.age = age;
     }
+	
+	function rybToRgb(ryb) {
+	  let [r, y, b] = ryb;
+
+	  // Convert RYB to RGB using Stiles-Burch model
+	  let r1 = r;
+	  let g1 = y + (r1 * 2 / 3);
+	  let b1 = b + (y * 1 / 2);
+
+	  g1 = Math.min(g1, 255);
+
+	  let r2 = r1 * 1 - b1 / 2;
+	  let g2 = g1 * 1 - b1 / 2;
+
+	  r2 = Math.min(r2, 255);
+	  g2 = Math.min(g2, 255);
+
+	  let rgb = [
+		r2 * 255,
+		g2 * 255,
+		b1 * 255
+	  ];
+
+	  return rgb;
+	}
 }
