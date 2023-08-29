@@ -363,10 +363,9 @@ export default class Pixel {
         this.age = age;
     }
 	
-	function rybToRgb(ryb) {
+	rybToRgb(ryb) {
 	  let [r, y, b] = ryb;
 
-	  // Convert RYB to RGB using Stiles-Burch model
 	  let r1 = r;
 	  let g1 = y + (r1 * 2 / 3);
 	  let b1 = b + (y * 1 / 2);
