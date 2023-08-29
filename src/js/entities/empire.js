@@ -47,6 +47,7 @@ export default class Empire {
         }
         if (this.maxSize > 0 && Math.random() < (this.maxSize - this.getTerritory().length) / this.getTerritory().length && this.getTerritory().length > 0) {
             this.crisisChance();
+			this.maxSize = this.getTerritory().length;
         }
 
         if (this.getTerritory().length > this.maxSize) {
