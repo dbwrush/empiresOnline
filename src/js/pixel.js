@@ -36,14 +36,14 @@ export default class Pixel {
         let e = new Empire(this.gameState, old.getName());
         e.addTerritory(this);
         this.age = 0;
-        this.strength = this.habitability * 20;
+        this.strength = (this.strength + this.habitability) * 20;
         e.setEnemy(old, true, true);
         old.setEnemy(e, true, true);
         e.setCapital(this);
         for (let p of this.neighbors) {
             if (p.getEmpire() === old && Math.random() < 0.5) {
                 e.addTerritory(p);
-                p.setStrength(p.getHabitability() * 20);
+                p.setStrength((p.getStrength() + p.getHabitability()) * 20);
             }
         }
         return e;

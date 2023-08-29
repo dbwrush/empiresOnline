@@ -57,7 +57,7 @@ export default class Paratrooper {
             if (this.target.getStrength() * 3 < this.strength) {
                 this.empire.addTerritory(this.target);
                 this.target.setAge(0);
-                this.target.setStrength(this.strength);
+                this.target.setStrength(this.strength * 4);
             } else {
                 this.target.setStrength(this.target.getStrength() - this.strength);
             }
