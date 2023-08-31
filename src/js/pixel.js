@@ -49,7 +49,7 @@ export default class Pixel {
 		for(let p of this.neighbors) {
 			if(p.getEmpire() == old && Math.random() < 0.3) {
 				e.addTerritory(p);
-				p.setStrength((p.getStrength() + p.getHabitability()) * 2);
+				p.setStrength((p.getStrength() + p.getHabitability()) * 10);
 				p.recruitNeighborsToRevolt(old);
 				p.setAge(0);
 			}
