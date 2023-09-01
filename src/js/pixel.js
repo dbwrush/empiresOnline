@@ -16,6 +16,7 @@ export default class Pixel {
         friction: 'friction',
         alliance: 'alliance',
         perspective: 'perspective',
+		stability: 'stability',
         habitability: 'habitability',
     };
 
@@ -47,7 +48,7 @@ export default class Pixel {
 	recruitNeighborsToRevolt(old) {
 		let e = this.getEmpire()
 		for(let p of this.neighbors) {
-			if(p.getEmpire() == old && Math.random() < 0.3) {
+			if(p.getEmpire() == old && Math.random() < 0.2) {
 				e.addTerritory(p);
 				p.setStrength((p.getStrength() + p.getHabitability()) * 10);
 				p.recruitNeighborsToRevolt(old);
@@ -264,10 +265,10 @@ export default class Pixel {
         switch (colorMode) {
             case 'empire':
                 if (empire) {
-                    let hue = empire.getColor();
-                    let saturation = 1.0;
+                    let hue = empire.getColor()[0];
+                    let saturation = empire.getColor()[1];
                     let brightness = 1.0;
-                    return `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
+                    return `hsl(${hue}, ${saturation}%, ${brightness * 50}%)`;
                 }
             case 'strength':
                 if (empire) {
@@ -278,10 +279,10 @@ export default class Pixel {
                         }
                         s /= this.friendlyNeighbors.length;
                     }
-                    let hue = empire.getColor();
-                    let saturation = 1.0;
+                    let hue = empire.getColor()[0];
+                    let saturation = empire.getColor()[1];
                     let brightness = s / 255;
-                    return `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
+                    return `hsl(${hue}, ${saturation}%, ${brightness * 50}%)`;
                 }
             case 'ideology':
                 if (empire) {
@@ -291,10 +292,10 @@ export default class Pixel {
             case 'need':
                 if (empire) {
                     let n = this.need;
-                    let hue = empire.getColor();
-                    let saturation = 1.0;
+                    let hue = empire.getColor()[0];
+                    let saturation = empire.getColor()[1];
                     let brightness = n / 255;
-                    return `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
+                    return `hsl(${hue}, ${saturation}%, ${brightness * 50}%)`;
                 }
             case 'age':
                 if (empire) {
@@ -310,10 +311,10 @@ export default class Pixel {
             case 'friction':
                 if (empire) {
                     let f = this.borderFriction;
-                    let hue = empire.getColor();
-                    let saturation = 1.0;
+                    let hue = empire.getColor()[0];
+                    let saturation = empire.getColor()[1];
                     let brightness = f / 255;
-                    return `hsl(${hue}, ${saturation * 100}%, ${brightness * 50}%)`;
+                    return `hsl(${hue}, ${saturation}%, ${brightness * 50}%)`;
                 }
             case 'alliance':
                 if (empire) {
@@ -348,6 +349,13 @@ export default class Pixel {
                     return 'rgb(0, 0, 100)';
                 }
                 return `rgb(0, ${this.habitability * 200}, 0)`;
+			case 'stability':
+				if(empire) {
+                    let hue = empire.getColor()[0];
+                    let saturation = empire.getColor()[1];
+                    let brightness = (1 - this.getEmpire().getStability()) * 50;
+                    return `hsl(${hue}, ${saturation}%, ${brightness}%)`;
+				}
             default:
                 if (this.habitability === 0) {
                     return 'rgb(0, 0, 100)';
@@ -371,26 +379,33 @@ export default class Pixel {
     }
 	
 	rybToRgb(ryb) {
-	  let [r, y, b] = ryb;
-
-	  let r1 = r;
-	  let g1 = y + (r1 * 2 / 3);
-	  let b1 = b + (y * 1 / 2);
-
-	  g1 = Math.min(g1, 255);
-
-	  let r2 = r1 * 1 - b1 / 2;
-	  let g2 = g1 * 1 - b1 / 2;
-
-	  r2 = Math.min(r2, 255);
-	  g2 = Math.min(g2, 255);
-
-	  let rgb = [
-		r2,
-		g2,
-		b1
-	  ];
-
-	  return rgb;
+		var r = ryb[0] / 255;
+		var y = ryb[1] / 255;
+		var b = ryb[2] / 255;
+		var w = Math.min(r, y, b);
+		r -= w;
+		y -= w;
+		b -= w;
+		var my = Math.max(r, y, b);
+		var g = Math.min(y, b);
+		y -= g;
+		b -= g;
+		if (b && g) {
+			b *= 2;
+			g *= 2;
+		}
+		r += y;
+		g += y;
+		var mg = Math.max(r, g, b);
+		if (mg) {
+			var n = my / mg;
+			r *= n;
+			g *= n;
+			b *= n;
+		}
+		r += w;
+		g += w;
+		b += w;
+		return [Math.floor(r * 255), Math.floor(g * 255), Math.floor(b * 255)];
 	}
 }

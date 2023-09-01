@@ -14,7 +14,7 @@ export default class Empire {
             ? EmpireNameGenerator.generateEmpireName(this.ideology[0], this.ideology[1], this.ideology[2], oldName.split(" ")[oldName.split(" ").length - 1])
             : EmpireNameGenerator.generateEmpireName(this.ideology[0], this.ideology[1], this.ideology[2], null);
 
-		this.color = Math.random() * 360;
+		this.color = [Math.random() * 360, Math.random() * 100];
         this.gameState = gameState;
         this.capital = null;
     }
@@ -36,7 +36,7 @@ export default class Empire {
         while (this.getTerritory().includes(null)) {
             this.removeTerritory(null);
         }
-        if (this.maxSize > 0 && Math.random() < (this.maxSize - this.getTerritory().length) / this.getTerritory().length && this.getTerritory().length > 0) {
+        if (this.maxSize > 0 && Math.random() < this.getStability() && this.getTerritory().length > 0) {
             this.crisisChance();
         }
 
@@ -90,29 +90,32 @@ export default class Empire {
 
     crisisChance() {
         const p = this.getTerritory()[(Math.random() * this.getTerritory().length) | 0];
-        if (!p) {//should never happen, but just in case.
-            this.removeTerritory(null);
-        } else {
-            if (Math.random() < 0.2 && this.getTerritory.length > 20) {//20% chance of a revolution spawning somewhere in the empire.
-                this.setEnemy(p.revolt(), true, true);
-            } else if (Math.random() < 0.3) {//30% chance of attempting to merge with an allied empire.
-                for (const e of this.allies) {
-                    if (this.ideoDifference(e) < (this.getCoopIso() + e.getCoopIso()) * (4 * Math.random()) * this.mergeDifficulty) {
-                        if (this.getTerritory().length > e.getTerritory().length) {//smaller empire always merges into larger one
-                            e.mergeInto(this);
-                        } else {
-                            this.mergeInto(e);
-                        }
-
-                        return;
-                    }
-                }
-            }
-        }
-		this.maxSize = this.getTerritory().length;
+		if (Math.random() < 0.05 && this.getTerritory().length > 20) {//5% chance of a revolution spawning somewhere in the empire.
+			this.setEnemy(p.revolt(), true, true);
+			this.maxSize = this.getTerritory().length;
+		} else if (Math.random() < 0.3) {//30% chance of attempting to merge with an allied empire.
+			for (const e of this.allies) {
+				if (this.ideoDifference(e) < (this.getCoopIso() + e.getCoopIso()) * (4 * Math.random()) * this.mergeDifficulty) {
+					if (this.getTerritory().length > e.getTerritory().length) {//smaller empire always merges into larger one
+						e.mergeInto(this);
+					} else {
+						this.mergeInto(e);
+					}
+					this.maxSize = this.getTerritory().length;
+					return;
+				}
+			}
+		} else {
+			if(Math.random() < 0.01) {
+				this.removeTerritory(p);
+			}
+		}
     }
 
     puppet(e) {//empire's ideology shifts to become more like e. 
+		if(!e) {
+			return;
+		}
         this.ideology[0] = (this.ideology[0] + e.ideology[0]) / 2;
         this.ideology[1] = (this.ideology[1] + e.ideology[1]) / 2;
         this.ideology[2] = (this.ideology[2] + e.ideology[2]) / 2;
@@ -146,6 +149,10 @@ export default class Empire {
             }
         }
     }
+	
+	getStability() {
+		return 1 - (this.getTerritory().length / this.maxSize);
+	}
 
     render(g) {
         let x = this.capital.getX() - (this.name.length * 0.66);
