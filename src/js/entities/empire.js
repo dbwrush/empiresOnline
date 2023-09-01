@@ -106,7 +106,7 @@ export default class Empire {
 				}
 			}
 		} else {
-			if(Math.random() < 0.01) {
+			if(Math.random() < 0.1 && this.getTerritory().length < 10) {
 				this.removeTerritory(p);
 			}
 		}
