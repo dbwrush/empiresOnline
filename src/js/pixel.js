@@ -318,9 +318,10 @@ export default class Pixel {
                 }
             case 'alliance':
                 if (empire) {
-                    let g = this.friendlyNeighbors.length;
-                    let r = 8 - g;
-                    return `rgb(${(r / 8) * 255}, ${(g / 8) * 255}, 0)`;
+					let hue = empire.getColor()[0];
+                    let saturation = empire.getColor()[1];
+                    let brightness = this.friendlyNeighbors.length / 8;
+                    return `hsl(${hue}, ${saturation}%, ${brightness * 50}%)`;
                 }
             case 'perspective':
                 if (empire) {

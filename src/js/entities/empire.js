@@ -23,6 +23,20 @@ export default class Empire {
         if (this.getTerritory().length === 0) {
             return;
         }
+		if (Math.random() < 0.2 && this.getEnemies().length == 0) {
+			this.ideology[0] *= 0.9;
+		} else if(Math.random() < 0.1 * this.getAllies().length) {
+			this.ideology[0] *= 1.1;
+			if(this.ideology[0] > 255) {
+				this.ideology[0] = 255;
+			}
+			let a = this.allies[Math.random() * this.allies.length];
+			if(a && Math.random() < 0.1) {
+				this.ideology[0] = (this.ideology[0] + this.ideology[0] + a.ideology[0]) / 3;
+				this.ideology[1] = (this.ideology[1] + this.ideology[1] + a.ideology[1]) / 3;
+				this.ideology[2] = (this.ideology[2] + this.ideology[2] + a.ideology[2]) / 3;
+			}
+		}
         if (this.gameState.getEmpireForPixel(this.capital) !== this) {
             if (Math.random() < 0.3 && this.getTerritory().length > 0) {
                 this.crisisChance();
