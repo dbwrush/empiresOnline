@@ -183,7 +183,7 @@ export default class Pixel {
                         if (empire.getEnemies().includes(p.getEmpire())) {
                             this.need += 127;
                         } else {
-                            this.need += 7;
+                            this.need += 2;
                         }
                     } else {
                         this.need += 1;
@@ -286,8 +286,9 @@ export default class Pixel {
                 }
             case 'ideology':
                 if (empire) {
+					let b = this.friendlyNeighbors.length / 8;
 					let color = this.rybToRgb(empire.getIdeologyColor());
-                    return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                    return `rgb(${color[0] * b}, ${color[1] * b}, ${color[2] * b})`;
                 }
             case 'need':
                 if (empire) {
