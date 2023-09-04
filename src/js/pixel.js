@@ -129,7 +129,7 @@ export default class Pixel {
                                 this.borderFriction += Math.abs(this.strength - p.getStrength()) * ((255 - empire.getCoopIso()) / 255);
                             }
                             let ideoDiff = empire.ideoDifference(pEmpire);
-                            let coopIso = (empire.getCoopIso() + pEmpire.getCoopIso()) / 4;
+                            let coopIso = (255 - ((empire.getCoopIso() + pEmpire.getCoopIso()) / 2));
                             if (ideoDiff < coopIso * Empire.getAllianceDifficulty()) {
                                 empire.setAlly(pEmpire);
                             }
