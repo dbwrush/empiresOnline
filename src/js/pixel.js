@@ -4,7 +4,7 @@ import Boat from './entities/boat.js';
 import Paratrooper from './entities/paratrooper.js';
 
 export default class Pixel {
-    static maxAge = 512;
+    static maxAge = 2048;
 	static gameState;
 	
 	static ColorMode = {
@@ -129,14 +129,14 @@ export default class Pixel {
                                 this.borderFriction += Math.abs(this.strength - p.getStrength()) * ((255 - empire.getCoopIso()) / 255);
                             }
                             let ideoDiff = empire.ideoDifference(pEmpire);
-                            let coopIso = (255 - ((empire.getCoopIso() + pEmpire.getCoopIso()) / 2));
+                            let coopIso = (empire.getCoopIso() + pEmpire.getCoopIso()) / 2;
                             if (ideoDiff < coopIso * Empire.getAllianceDifficulty()) {
                                 empire.setAlly(pEmpire);
                             }
                             if (this.borderFriction > this.gameState.getWarThreshold() && coopIso < ideoDiff * 0.33 * Math.random() && !empire.getEnemies().includes(pEmpire)) {
                                 empire.setEnemy(pEmpire, true, true);
                             }
-                            if (empire.getEnemies().includes(pEmpire) && ((ideoDiff + (this.borderFriction / 5)) * 2 < this.gameState.getWarThreshold())) {
+                            if (empire.getEnemies().includes(pEmpire) && ((ideoDiff + (this.borderFriction / 5)) < this.gameState.getWarThreshold())) {
                                 empire.makePeace(pEmpire);
                             }
                         }
@@ -234,6 +234,9 @@ export default class Pixel {
         if (empire == null) {
             return;
         }
+		if(Math.random() < empire.getCoopIso() / 255) {
+			return;
+		}
         for (let p of this.neighbors) {
             if (!p.isHabitable()) {
                 this.gameState.addBoat(new Boat(empire, this.strength / 2, p.getX(), p.getY(), this.gameState, Math.random() * 8));

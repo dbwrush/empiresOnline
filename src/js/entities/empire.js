@@ -7,8 +7,8 @@ export default class Empire {
         this.ideology = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
 
         this.maxSize = 0;
-        this.mergeDifficulty = 0.03;
-        this.allianceDifficulty = 1.2;
+        this.mergeDifficulty = 0.3;
+        this.allianceDifficulty = 0.3;
 
         this.name = oldName
             ? EmpireNameGenerator.generateEmpireName(this.ideology[0], this.ideology[1], this.ideology[2], oldName.split(" ")[oldName.split(" ").length - 1])
@@ -23,19 +23,19 @@ export default class Empire {
         if (this.getTerritory().length === 0) {
             return;
         }
-		if (Math.random() < 0.2 && this.getEnemies().length == 0) {
+		if (Math.random() < 0.02 && this.getEnemies().length == 0) {
 			this.ideology[0] *= 0.9;
-		} else if(Math.random() < 0.1 * this.getAllies().length) {
+		} else if(Math.random() < 0.01 * this.getAllies().length) {
 			this.ideology[0] *= 1.1;
 			if(this.ideology[0] > 255) {
 				this.ideology[0] = 255;
 			}
-			let a = this.allies[Math.random() * this.allies.length];
-			if(a && Math.random() < 0.1) {
-				this.ideology[0] = (this.ideology[0] + this.ideology[0] + a.ideology[0]) / 3;
-				this.ideology[1] = (this.ideology[1] + this.ideology[1] + a.ideology[1]) / 3;
-				this.ideology[2] = (this.ideology[2] + this.ideology[2] + a.ideology[2]) / 3;
-			}
+		}
+		let a = this.getAllies()[Math.random() * this.getAllies().length];
+		if(a && Math.random() < 0.5) {
+			this.ideology[0] = (this.ideology[0] + this.ideology[0] + a.ideology[0]) / 3;
+			this.ideology[1] = (this.ideology[1] + this.ideology[1] + a.ideology[1]) / 3;
+			this.ideology[2] = (this.ideology[2] + this.ideology[2] + a.ideology[2]) / 3;
 		}
         if (this.gameState.getEmpireForPixel(this.capital) !== this) {
             if (Math.random() < 0.3 && this.getTerritory().length > 0) {
@@ -58,7 +58,7 @@ export default class Empire {
             this.maxSize = this.getTerritory().length;
         }
         for (const e of this.allies) {
-            if (this.ideoDifference(e) < (this.getCoopIso() + e.getCoopIso()) * (4 * Math.random()) * this.mergeDifficulty) {
+            if (this.ideoDifference(e) < ((this.getCoopIso() + e.getCoopIso()) / 2) * this.mergeDifficulty) {
                 if (this.getTerritory().length > e.getTerritory().length) {
                     e.mergeInto(this);
                 } else {
