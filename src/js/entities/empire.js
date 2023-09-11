@@ -25,6 +25,9 @@ export default class Empire {
         }
 		if (Math.random() < 0.02 && this.getEnemies().length == 0) {
 			this.ideology[0] *= 0.9;
+			if(this.ideology[0] < 30 && Math.random() < 0.2) {
+				this.crisisChance();
+			}
 		} else if(Math.random() < 0.01 * this.getAllies().length) {
 			this.ideology[0] *= 1.1;
 			if(this.ideology[0] > 255) {
@@ -101,6 +104,10 @@ export default class Empire {
             this.allies = this.allies.filter(ally => ally !== e);
         }
     }
+
+	getIdeology() {
+		return this.ideology;
+	}
 
     crisisChance() {
         const p = this.getTerritory()[(Math.random() * this.getTerritory().length) | 0];
@@ -250,7 +257,7 @@ export default class Empire {
     ideoDifference(e) {
         let total = 0;
         for (let i = 0; i < this.ideology.length; i++) {
-            total += Math.abs(this.ideology[i] - e.ideology[i]);
+            total += Math.abs(this.ideology[i] - e[i]);
         }
         return total;
     }

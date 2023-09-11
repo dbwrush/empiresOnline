@@ -30,7 +30,27 @@ export default class Pixel {
         this.age = 0;
         this.neighbors = null;
         this.friendlyNeighbors = [];
+		
     }
+	
+	getLocalIdeology() {
+		return localIdeology;
+	}
+	
+	setLocalIdeology(newIdeo) {
+		this.localIdeology = [newIdeo[0], newIdeo[1], newIdeo[2]];
+	}
+	
+	avgLocalIdeology(newIdeo, prop) {
+		if(this.localIdeology) {
+			this.setLocalIdeology(newIdeo);
+			return;
+		}
+		this.localIdeology = [0, 0, 0];
+		this.localIdeology[0] = (this.localIdeology[0] * (1 - prop)) + (newIdeo[0] * prop);
+		this.localIdeology[1] = (this.localIdeology[1] * (1 - prop)) + (newIdeo[1] * prop);
+		this.localIdeology[2] = (this.localIdeology[2] * (1 - prop)) + (newIdeo[2] * prop);
+	}
 
     revolt() {
         let old = this.getEmpire();
@@ -106,6 +126,13 @@ export default class Pixel {
         this.borderFriction = 0;
         let empire = this.getEmpire();
         if (empire) {
+			if(!this.localIdeology) {
+				this.setLocalIdeology(empire.getIdeology());
+			}
+			let diff = empire.ideoDifference(this.localIdeology) / 3;
+			if(diff > this.localIdeology[0] && Math.random() * 255 < diff && Math.random() < 0.01) {
+				this.revolt();
+			}
 			if(this.friendlyNeighbors.length == this.neighbors.length) {
 				return;
 			}
@@ -128,7 +155,7 @@ export default class Pixel {
                             } else {
                                 this.borderFriction += Math.abs(this.strength - p.getStrength()) * ((255 - empire.getCoopIso()) / 255);
                             }
-                            let ideoDiff = empire.ideoDifference(pEmpire);
+                            let ideoDiff = empire.ideoDifference(pEmpire.getIdeology());
                             let coopIso = (empire.getCoopIso() + pEmpire.getCoopIso()) / 2;
                             if (ideoDiff < coopIso * Empire.getAllianceDifficulty()) {
                                 empire.setAlly(pEmpire);
@@ -196,6 +223,9 @@ export default class Pixel {
             if (this.need > 255) {
                 this.need = 255;
             }
+			if(Math.random() * 255 < this.strength) {
+				this.avgLocalIdeology(empire.getIdeology(), this.strength / 255);
+			}
         }
     }
 
@@ -288,9 +318,9 @@ export default class Pixel {
                     return `hsl(${hue}, ${saturation}%, ${brightness * 50}%)`;
                 }
             case 'ideology':
-                if (empire) {
+                if (empire && this.localIdeology) {
 					let b = this.friendlyNeighbors.length / 8;
-					let color = this.rybToRgb(empire.getIdeologyColor());
+					let color = this.rybToRgb(this.localIdeology.map(value => (value > 255 ? 255 : value)));
                     return `rgb(${color[0] * b}, ${color[1] * b}, ${color[2] * b})`;
                 }
             case 'need':
@@ -330,7 +360,7 @@ export default class Pixel {
             case 'perspective':
                 if (empire) {
                     let r = (8 - this.friendlyNeighbors.length) * 255;
-                    let g = 255 - (empire.ideoDifference(this.gameState.getPerspectiveEmpire()) / 3);
+                    let g = 255 - (empire.ideoDifference(this.gameState.getPerspectiveEmpire().getIdeology()) / 3);
                     let base = `rgb(${r / 8}, ${g / 8}, 0)`;
                     if (this.gameState.getPerspectiveEmpire() === empire) {
                         return 'rgb(255, 255, 0)';
