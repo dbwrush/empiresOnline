@@ -108,11 +108,15 @@ export default class Empire {
 	getIdeology() {
 		return this.ideology;
 	}
+	
+	setIdeology(ideo) {
+		this.ideology = ideo;
+	}
 
     crisisChance() {
         const p = this.getTerritory()[(Math.random() * this.getTerritory().length) | 0];
 		if (Math.random() < 0.05 && this.getTerritory().length > 20) {//5% chance of a revolution spawning somewhere in the empire.
-			this.setEnemy(p.revolt(), true, true);
+			this.setEnemy(p.revolt([Math.random() * 255, Math.random() * 255, Math.random() * 255]), true, true);
 			this.maxSize = this.getTerritory().length;
 		} else if (Math.random() < 0.3) {//30% chance of attempting to merge with an allied empire.
 			for (const e of this.allies) {

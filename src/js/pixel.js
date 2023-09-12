@@ -42,19 +42,25 @@ export default class Pixel {
 	}
 	
 	avgLocalIdeology(newIdeo, prop) {
-		if(this.localIdeology) {
+		if(prop > 1) {
+			prop = 1;
+		}
+		if(prop < 0) {
+			return;
+		}
+		if(!this.localIdeology) {
 			this.setLocalIdeology(newIdeo);
 			return;
 		}
-		this.localIdeology = [0, 0, 0];
 		this.localIdeology[0] = (this.localIdeology[0] * (1 - prop)) + (newIdeo[0] * prop);
 		this.localIdeology[1] = (this.localIdeology[1] * (1 - prop)) + (newIdeo[1] * prop);
 		this.localIdeology[2] = (this.localIdeology[2] * (1 - prop)) + (newIdeo[2] * prop);
 	}
 
-    revolt() {
+    revolt(ideo) {
         let old = this.getEmpire();
         let e = new Empire(this.gameState, old.getName());
+		e.setIdeology(ideo);
         e.addTerritory(this);
         this.age = 0;
         this.strength = (this.strength + this.habitability) * 20;
@@ -68,7 +74,7 @@ export default class Pixel {
 	recruitNeighborsToRevolt(old) {
 		let e = this.getEmpire()
 		for(let p of this.neighbors) {
-			if(p.getEmpire() == old && Math.random() < 0.2) {
+			if(p.getEmpire() == old && p.localIdeology && e.ideoDifference(p.localIdeology) < this.localIdeology[0] && Math.random() < 0.3) {
 				e.addTerritory(p);
 				p.setStrength((p.getStrength() + p.getHabitability()) * 10);
 				p.recruitNeighborsToRevolt(old);
@@ -130,8 +136,8 @@ export default class Pixel {
 				this.setLocalIdeology(empire.getIdeology());
 			}
 			let diff = empire.ideoDifference(this.localIdeology) / 3;
-			if(diff > this.localIdeology[0] && Math.random() * 255 < diff && Math.random() < 0.01) {
-				this.revolt();
+			if(diff > this.localIdeology[0] && Math.random() * 255 < diff && Math.random() < 0.1) {
+				this.revolt(this.localIdeology);
 			}
 			if(this.friendlyNeighbors.length == this.neighbors.length) {
 				return;
@@ -225,6 +231,13 @@ export default class Pixel {
             }
 			if(Math.random() * 255 < this.strength) {
 				this.avgLocalIdeology(empire.getIdeology(), this.strength / 255);
+			} else if(this.localIdeology) {
+				let e = empire.getIdeology();
+				let l = this.localIdeology;
+				let diff = [e[0] - l[0], e[1] - l[1], e[2] - e[2]];
+				let r = Math.random();
+				this.localIdeology = [l[0] + r * diff[0], l[1] + r * diff[1], l[2] + r * diff[2]];
+				this.localIdeology = this.localIdeology.map(value => (value > 255 ? 255 : value));
 			}
         }
     }
