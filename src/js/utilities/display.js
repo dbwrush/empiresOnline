@@ -2,6 +2,7 @@
 
 import Pixel from '../pixel.js';
 import State from '../state.js';
+import Empire from '../entities/empire.js';
 
 class Display {
     constructor(title, width, height) {
@@ -34,6 +35,7 @@ class Display {
 		});
 
         this.canvas = document.createElement("canvas");
+		Empire.setCanvas(this.canvas);
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         window.addEventListener("resize", (event) => {

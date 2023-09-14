@@ -1,6 +1,8 @@
 import EmpireNameGenerator from '../utilities/empire-name-generator.js';
 
-export default class Empire {
+export default class Empire {	
+	static ctx = 0;
+
     constructor(gameState, oldName) {
         this.allies = [];
         this.enemies = [];
@@ -18,6 +20,28 @@ export default class Empire {
         this.gameState = gameState;
         this.capital = null;
     }
+	
+	static setCanvas(canvas) {
+		Empire.ctx = canvas.getContext("2d");
+	}
+	
+	setCapital(newCap) {
+		this.capital = newCap;
+		
+		let x = this.capital.getX() * this.gameState.getScale() - (Empire.ctx.measureText(this.name).width / 2);
+        let y = this.capital.getY();
+        if (x < 0) {
+            x = 0;
+        }
+        if (x + Empire.ctx.measureText(this.name).width > this.gameState.getWidth() * this.gameState.getScale()) {
+            x -= Empire.ctx.measureText(this.name).width / 2;
+        }
+        if (y < 2) {
+            y = 2;
+        }
+		this.titleX = x;
+		this.titleY = y;
+	}
 
     tick() {
         if (this.getTerritory().length === 0) {
@@ -47,7 +71,7 @@ export default class Empire {
                 this.puppet(this.gameState.getEmpireForPixel(this.capital));
             }
             if (this.getTerritory().length > 0) {
-                this.capital = this.getTerritory()[0];
+				this.setCapital(this.getTerritory()[0]);
             }
         }
         while (this.getTerritory().includes(null)) {
@@ -152,10 +176,6 @@ export default class Empire {
         return this.capital;
     }
 
-    setCapital(capital) {
-        this.capital = capital;
-    }
-
     removeTerritory(pixel) {
         if (this.gameState.getTerritoryManager().getPixelsForEmpire(this).includes(pixel)) {
             this.gameState.getTerritoryManager().removePixelFromEmpire(pixel);
@@ -179,20 +199,9 @@ export default class Empire {
 		return 1 - (this.getTerritory().length / this.maxSize);
 	}
 
-    render(g) {
-        let x = this.capital.getX() - (this.name.length * 0.66);
-        let y = this.capital.getY();
-        if (x < 0) {
-            x = 0;
-        }
-        if (x + (this.name.length * 1.5) > this.gameState.getWidth()) {
-            x -= this.name.length * 0.4;
-        }
-        if (y < 2) {
-            y = 2;
-        }
+    render(g) {		
 		g.fillStyle = "white";
-        g.fillText(this.name, x * this.gameState.getScale(), y * this.gameState.getScale());
+        g.fillText(this.name, this.titleX, this.titleY * this.gameState.getScale());
     }
 
     getCoopIso() {

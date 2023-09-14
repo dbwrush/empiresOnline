@@ -136,7 +136,7 @@ export default class Pixel {
 				this.setLocalIdeology(empire.getIdeology());
 			}
 			let diff = empire.ideoDifference(this.localIdeology) / 3;
-			if(diff > this.localIdeology[0] && Math.random() * 255 < diff && Math.random() < 0.1) {
+			if(diff > this.localIdeology[0] && Math.random() * 255 < diff && Math.random() < 0.1 && this.age > 100) {
 				this.revolt(this.localIdeology);
 			}
 			if(this.friendlyNeighbors.length == this.neighbors.length) {
