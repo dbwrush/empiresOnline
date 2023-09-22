@@ -229,7 +229,7 @@ export default class Pixel {
             if (this.need > 255) {
                 this.need = 255;
             }
-			if(Math.random() * 255 < this.strength && this.age > 100) {
+			if(Math.random() < this.strength / 255 * this.habitability && this.age > 100) {
 				this.avgLocalIdeology(empire.getIdeology(), this.strength / 255);
 			} else if(this.localIdeology && this.age > 100) {
 				let e = empire.getIdeology();
