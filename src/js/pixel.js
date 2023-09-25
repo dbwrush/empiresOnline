@@ -4,7 +4,7 @@ import Boat from './entities/boat.js';
 import Paratrooper from './entities/paratrooper.js';
 
 export default class Pixel {
-    static maxAge = 2048;
+    static maxAge = 0;
 	static gameState;
 	
 	static ColorMode = {
@@ -63,7 +63,7 @@ export default class Pixel {
 		e.setIdeology(ideo);
         e.addTerritory(this);
         this.age = 0;
-        this.strength = (this.strength + this.habitability) * 20;
+        this.strength = (this.strength + this.habitability) * 10;
         e.setEnemy(old, true, true);
         old.setEnemy(e, true, true);
         e.setCapital(this);
@@ -76,7 +76,7 @@ export default class Pixel {
 		for(let p of this.neighbors) {
 			if(p.getEmpire() == old && p.localIdeology && e.ideoDifference(p.localIdeology) < this.localIdeology[0] && Math.random() < 0.3) {
 				e.addTerritory(p);
-				p.setStrength((p.getStrength() + p.getHabitability()) * 10);
+				p.setStrength((p.getStrength() + p.getHabitability()) * 5);
 				p.recruitNeighborsToRevolt(old);
 				p.setAge(0);
 			}
@@ -229,15 +229,20 @@ export default class Pixel {
             if (this.need > 255) {
                 this.need = 255;
             }
-			if(Math.random() < this.strength / 255 * this.habitability && this.age > 100) {
+			if(Math.random() < ((this.strength / this.habitability) / 100) && this.age > 10) {//drift closer to empire
 				this.avgLocalIdeology(empire.getIdeology(), this.strength / 255);
-			} else if(this.localIdeology && this.age > 100) {
+			} else if(this.localIdeology && this.age > 10) {//drift away from empire
 				let e = empire.getIdeology();
 				let l = this.localIdeology;
 				let diff = [e[0] - l[0], e[1] - l[1], e[2] - e[2]];
-				let r = Math.random();
-				this.localIdeology = [l[0] + r * diff[0], l[1] + r * diff[1], l[2] + r * diff[2]];
-				this.localIdeology = this.localIdeology.map(value => (value > 255 ? 255 : value));
+				for (var i = 0; i < 3; i++) {
+					if(Math.abs(diff[i]) < 1) {
+						diff[i] = (Math.random() - 0.5) * 2;
+					}
+				}
+				let r = Math.random(40);
+				this.localIdeology = [l[0] + (r * diff[0]), l[1] + (r * diff[1]), l[2] + (r * diff[2])];
+				this.localIdeology = this.localIdeology.map(value => (value < 0 ? 0 : value > 255 ? 255 : value));
 			}
         }
     }
@@ -348,7 +353,7 @@ export default class Pixel {
                 if (empire) {
                     let a = this.age;
                     if (a > Pixel.maxAge) {
-                        a = Pixel.maxAge;
+                        Pixel.maxAge = a;
                     }
                     let hue = (a / Pixel.maxAge) * 120;
                     let saturation = 1.0;

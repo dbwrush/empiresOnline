@@ -47,18 +47,18 @@ export default class Empire {
         if (this.getTerritory().length === 0) {
             return;
         }
+		if(this.ideology[0] < 30 && Math.random() < 0.02) {
+			this.crisisChance();
+		}
 		if (Math.random() < 0.02 && this.getEnemies().length == 0) {
 			this.ideology[0] *= 0.9;
-			if(this.ideology[0] < 30 && Math.random() < 0.2) {
-				this.crisisChance();
-			}
-		} else if(Math.random() < 0.01 * this.getAllies().length) {
+		} else if(Math.random() < 0.04 * this.getAllies().length) {
 			this.ideology[0] *= 1.1;
 			if(this.ideology[0] > 255) {
 				this.ideology[0] = 255;
 			}
 		}
-		let a = this.getAllies()[Math.random() * this.getAllies().length];
+		let a = this.getAllies()[Math.random(this.getAllies().length)];
 		if(a && Math.random() < 0.5) {
 			this.ideology[0] = (this.ideology[0] + this.ideology[0] + a.ideology[0]) / 3;
 			this.ideology[1] = (this.ideology[1] + this.ideology[1] + a.ideology[1]) / 3;
