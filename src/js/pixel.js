@@ -163,7 +163,7 @@ export default class Pixel {
                             }
                             let ideoDiff = empire.ideoDifference(pEmpire.getIdeology());
                             let coopIso = (empire.getCoopIso() + pEmpire.getCoopIso()) / 2;
-                            if (ideoDiff < coopIso * Empire.getAllianceDifficulty()) {
+                            if (ideoDiff * Empire.getAllianceDifficulty() < coopIso) {
                                 empire.setAlly(pEmpire);
                             }
                             if (this.borderFriction > this.gameState.getWarThreshold() && coopIso < ideoDiff * 0.33 * Math.random() && !empire.getEnemies().includes(pEmpire)) {
