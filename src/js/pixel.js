@@ -229,19 +229,19 @@ export default class Pixel {
             if (this.need > 255) {
                 this.need = 255;
             }
-			if(Math.random() < ((this.strength / this.habitability) / 100) && this.age > 10) {//drift closer to empire
+			if(Math.random() < ((this.strength / this.habitability) / 10) && this.age > 10) {//drift closer to empire
 				this.avgLocalIdeology(empire.getIdeology(), this.strength / 255);
 			} else if(this.localIdeology && this.age > 10) {//drift away from empire
 				let e = empire.getIdeology();
 				let l = this.localIdeology;
 				let diff = [e[0] - l[0], e[1] - l[1], e[2] - e[2]];
-				for (var i = 0; i < 3; i++) {
+				/*for (var i = 0; i < 3; i++) {
 					if(Math.abs(diff[i]) < 1) {
 						diff[i] = (Math.random() - 0.5) * 2;
 					}
-				}
-				let r = Math.random(40);
-				this.localIdeology = [l[0] + (r * diff[0]), l[1] + (r * diff[1]), l[2] + (r * diff[2])];
+				}*/
+				let r = Math.random();
+				this.localIdeology = [l[0] + (r * -diff[0]), l[1] + (r * -diff[1]), l[2] + (r * -diff[2])];
 				this.localIdeology = this.localIdeology.map(value => (value < 0 ? 0 : value > 255 ? 255 : value));
 			}
         }
