@@ -10,7 +10,7 @@ export default class Empire {
 
         this.maxSize = 0;
         this.mergeDifficulty = 0.3;
-        this.allianceDifficulty = 0.3;
+        this.allianceDifficulty = 0.5;
 
         this.name = oldName
             ? EmpireNameGenerator.generateEmpireName(this.ideology[0], this.ideology[1], this.ideology[2], oldName.split(" ")[oldName.split(" ").length - 1])
