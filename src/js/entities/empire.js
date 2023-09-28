@@ -47,13 +47,13 @@ export default class Empire {
         }
 		if (Math.random() < 0.05 && this.getEnemies().length == 0) {
 			this.ideology[0] *= 0.9;
-		} else if(Math.random() < 0.01 * this.getAllies().length) {
+		} else if(Math.random() < 0.02 * this.getAllies().length) {
 			this.ideology[0] *= 1.1;
 			if(this.ideology[0] > 255) {
 				this.ideology[0] = 255;
 			}
 		}
-		if(this.getAllies().length > 0 && Math.random() < 0.02) {
+		if(this.getAllies().length > 0 && Math.random() < 0.01) {
 			let a = this.getAllies()[Math.floor(Math.random(this.getAllies().length))];
 			this.ideology[0] = (this.ideology[0] + this.ideology[0] + a.ideology[0]) / 3;
 			this.ideology[1] = (this.ideology[1] + this.ideology[1] + a.ideology[1]) / 3;
