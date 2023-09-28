@@ -52,7 +52,7 @@ export default class Boat {
                     let coopIso = (this.empire.getCoopIso() + target.getEmpire().getCoopIso()) / 4;
                     let borderFriction = (this.strength + target.getStrength()) / 2;
                     
-                    if (ideoDiff < coopIso * Empire.getAllianceDifficulty()) {
+                    if (ideoDiff * this.empire.getAllianceDifficulty() < coopIso) {
                         this.empire.setAlly(target.getEmpire());
                     } else if (borderFriction > this.gs.getWarThreshold() && coopIso < ideoDiff && !this.empire.getEnemies().includes(target.getEmpire())) {
                         this.empire.setEnemy(target.getEmpire(), true, true);

@@ -156,7 +156,27 @@ export default class Pixel {
                     }
                     if (pEmpire) {
                         if (pEmpire !== empire) {
-                            if (empire.getAllies().includes(pEmpire)) {
+							let ideoDiff = empire.ideoDifference(pEmpire.getIdeology());
+                            let coopIso = (empire.getCoopIso() + pEmpire.getCoopIso()) / 2;
+							if(empire.getAllies().includes(pEmpire)) {
+								this.borderFriction += (Math.abs(this.strength - p.getStrength()) / 5) * ((255 - empire.getCoopIso()) / 255);
+							} else if(empire.getEnemies().includes(pEmpire)) {
+								if ((ideoDiff + (this.borderFriction / 5)) < this.gameState.getWarThreshold()) {
+									empire.makePeace(pEmpire);
+								} else {
+									this.borderFriction += Math.abs(this.strength - p.getStrength()) * 5 * ((255 - empire.getCoopIso()) / 255);
+								}
+							} else {
+								this.borderFriction += Math.abs(this.strength - p.getStrength()) * ((255 - empire.getCoopIso()) / 255);
+								if(ideoDiff * empire.getAllianceDifficulty() < coopIso) {
+									empire.setAlly(pEmpire);
+								} else if(this.borderFriction > this.gameState.getWarThreshold() && coopIso < ideoDiff * 0.33 * Math.random()) {
+									empire.setEnemy(pEmpire, true, true);
+								} else if(ideoDiff * empire.getAllianceDifficulty() < coopIso * 2) {
+									empire.breakAlliance(pEmpire);
+								}
+							}
+                            /*if (empire.getAllies().includes(pEmpire)) {
                                 this.borderFriction += (Math.abs(this.strength - p.getStrength()) / 5) * ((255 - empire.getCoopIso()) / 255);
                             } else {
                                 this.borderFriction += Math.abs(this.strength - p.getStrength()) * ((255 - empire.getCoopIso()) / 255);
@@ -171,7 +191,7 @@ export default class Pixel {
                             }
                             if (empire.getEnemies().includes(pEmpire) && ((ideoDiff + (this.borderFriction / 5)) < this.gameState.getWarThreshold())) {
                                 empire.makePeace(pEmpire);
-                            }
+                            }*/
                         }
                     }
                 }
@@ -235,11 +255,11 @@ export default class Pixel {
 				let e = empire.getIdeology();
 				let l = this.localIdeology;
 				let diff = [e[0] - l[0], e[1] - l[1], e[2] - e[2]];
-				/*for (var i = 0; i < 3; i++) {
+				for (var i = 0; i < 3; i++) {
 					if(Math.abs(diff[i]) < 1) {
 						diff[i] = (Math.random() - 0.5) * 2;
 					}
-				}*/
+				}
 				let r = Math.random();
 				this.localIdeology = [l[0] + (r * -diff[0]), l[1] + (r * -diff[1]), l[2] + (r * -diff[2])];
 				this.localIdeology = this.localIdeology.map(value => (value < 0 ? 0 : value > 255 ? 255 : value));

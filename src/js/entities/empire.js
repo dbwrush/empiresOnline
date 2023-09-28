@@ -9,12 +9,10 @@ export default class Empire {
         this.ideology = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
 
         this.maxSize = 0;
-        this.mergeDifficulty = 0.3;
-        this.allianceDifficulty = 0.3;
+        this.mergeDifficulty = 10;
+        this.allianceDifficulty = 5;
 
-        this.name = oldName
-            ? EmpireNameGenerator.generateEmpireName(this.ideology[0], this.ideology[1], this.ideology[2], oldName.split(" ")[oldName.split(" ").length - 1])
-            : EmpireNameGenerator.generateEmpireName(this.ideology[0], this.ideology[1], this.ideology[2], null);
+        this.name = EmpireNameGenerator.generateEmpireName();
 
 		this.color = [Math.random() * 360, Math.random() * 100];
         this.gameState = gameState;
@@ -47,19 +45,16 @@ export default class Empire {
         if (this.getTerritory().length === 0) {
             return;
         }
-		if(this.ideology[0] < 30 && Math.random() < 0.02) {
-			this.crisisChance();
-		}
-		if (Math.random() < 0.02 && this.getEnemies().length == 0) {
+		if (Math.random() < 0.05 && this.getEnemies().length == 0) {
 			this.ideology[0] *= 0.9;
-		} else if(Math.random() < 0.04 * this.getAllies().length) {
+		} else if(Math.random() < 0.01 * this.getAllies().length) {
 			this.ideology[0] *= 1.1;
 			if(this.ideology[0] > 255) {
 				this.ideology[0] = 255;
 			}
 		}
-		let a = this.getAllies()[Math.random(this.getAllies().length)];
-		if(a && Math.random() < 0.5) {
+		if(this.getAllies().length > 0 && Math.random() < 0.02) {
+			let a = this.getAllies()[Math.floor(Math.random(this.getAllies().length))];
 			this.ideology[0] = (this.ideology[0] + this.ideology[0] + a.ideology[0]) / 3;
 			this.ideology[1] = (this.ideology[1] + this.ideology[1] + a.ideology[1]) / 3;
 			this.ideology[2] = (this.ideology[2] + this.ideology[2] + a.ideology[2]) / 3;
@@ -84,8 +79,8 @@ export default class Empire {
         if (this.getTerritory().length > this.maxSize) {
             this.maxSize = this.getTerritory().length;
         }
-        for (const e of this.allies) {
-            if (this.ideoDifference(e) < ((this.getCoopIso() + e.getCoopIso()) / 2) * this.mergeDifficulty) {
+        for (let e of this.allies) {
+            if (this.ideoDifference(e.ideology) * this.mergeDifficulty < ((this.getCoopIso() + e.getCoopIso()) / 2)) {
                 if (this.getTerritory().length > e.getTerritory().length) {
                     e.mergeInto(this);
                 } else {
@@ -144,7 +139,7 @@ export default class Empire {
 			this.maxSize = this.getTerritory().length;
 		} else if (Math.random() < 0.3) {//30% chance of attempting to merge with an allied empire.
 			for (const e of this.allies) {
-				if (this.ideoDifference(e) < (this.getCoopIso() + e.getCoopIso()) * (4 * Math.random()) * this.mergeDifficulty) {
+				if (this.ideoDifference(e) * this.mergeDifficulty < (this.getCoopIso() + e.getCoopIso()) * (4 * Math.random())) {
 					if (this.getTerritory().length > e.getTerritory().length) {//smaller empire always merges into larger one
 						e.mergeInto(this);
 					} else {
@@ -242,9 +237,26 @@ export default class Empire {
         if (this.enemies.includes(e)) {
             this.enemies = this.enemies.filter(enemy => enemy !== e);
             e.enemies = e.enemies.filter(enemy => enemy !== this);
+			for(const a of e.getAllies()) {
+				if(a.enemies.includes(this)) {
+					a.makePeace(this);
+				}
+			}
+			for(const a of this.getAllies()) {
+				if(this.enemies.includes(a)) {
+					this.makePeace(a);
+				}
+			}
         }
     }
 
+    breakAlliance(e) {
+        if (this.allies.includes(e)) {
+            this.allies = this.allies.filter(ally => ally !== e);
+            e.allies = e.allies.filter(ally => ally !== this);
+        }
+    }
+	
     setAlly(e) {
         if (e === this) {
             return;
@@ -259,7 +271,7 @@ export default class Empire {
                 return;
             }
         }
-        this.makePeace(e);
+		this.makePeace(e);
         if (this.allies.includes(e)) {
             return;
         }
@@ -304,7 +316,7 @@ export default class Empire {
         return this.allies;
     }
 
-    static getAllianceDifficulty() {
+    getAllianceDifficulty() {
         return this.allianceDifficulty;
     }
 }
