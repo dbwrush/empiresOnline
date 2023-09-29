@@ -126,6 +126,15 @@ export default class Pixel {
             this.strength += this.habitability;
             this.strength *= 0.99;
         }
+		if (Math.random() < 0.01) {
+			this.spawnBoat();
+		}
+		if (Math.random() < 0.001) {
+			this.spawnMissile();
+		}
+		if (Math.random() < 0.0001) {
+			this.spawnParatrooper();
+		}
     }
 
     attackPhase() {

@@ -197,15 +197,6 @@ class GameState extends State {
 		this.shuffleArray(this.habitablePixels);
 		for (const p of this.habitablePixels) {
 			p.strengthPhase();
-			if (Math.random() < 0.01) {
-				p.spawnBoat();
-			}
-			if (Math.random() < 0.001) {
-				p.spawnMissile();
-			}
-			if (Math.random() < 0.0001) {
-				p.spawnParatrooper();
-			}
 		}
 		for (const p of this.habitablePixels) {
 			p.attackPhase();
