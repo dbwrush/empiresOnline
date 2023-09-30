@@ -258,7 +258,7 @@ export default class Pixel {
             if (this.need > 255) {
                 this.need = 255;
             }
-			if(Math.random() < ((this.strength / this.habitability) / 20) && this.age > 10) {//drift closer to empire
+			if(Math.random() < ((this.strength / this.habitability) / 10) && this.age > 10) {//drift closer to empire
 				this.avgLocalIdeology(empire.getIdeology(), this.strength / 255);
 			} else if(this.localIdeology && this.age > 10) {//drift away from empire
 				let e = empire.getIdeology();
