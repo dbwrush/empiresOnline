@@ -74,7 +74,7 @@ export default class Pixel {
 	recruitNeighborsToRevolt(old) {
 		let e = this.getEmpire()
 		for(let p of this.neighbors) {
-			if(p.getEmpire() == old && p.localIdeology && e.ideoDifference(p.localIdeology) < this.localIdeology[0] && Math.random() < 0.3) {
+			if(p.getEmpire() == old && p.localIdeology && e.ideoDifference(p.localIdeology) < this.localIdeology[0] && Math.random() < 0.1) {
 				e.addTerritory(p);
 				p.setStrength((p.getStrength() + p.getHabitability()) * 5);
 				p.recruitNeighborsToRevolt(old);
@@ -166,7 +166,7 @@ export default class Pixel {
                     if (pEmpire) {
                         if (pEmpire !== empire) {
 							let ideoDiff = empire.ideoDifference(pEmpire.getIdeology());
-                            let coopIso = (empire.getCoopIso() + pEmpire.getCoopIso()) / 2;
+                            let coopIso = Math.min(empire.getCoopIso(), pEmpire.getCoopIso());
 							if(empire.getAllies().includes(pEmpire)) {
 								this.borderFriction += (Math.abs(this.strength - p.getStrength()) / 5) * ((255 - empire.getCoopIso()) / 255);
 							} else if(empire.getEnemies().includes(pEmpire)) {
@@ -258,7 +258,7 @@ export default class Pixel {
             if (this.need > 255) {
                 this.need = 255;
             }
-			if(Math.random() < ((this.strength / this.habitability) / 10) && this.age > 10) {//drift closer to empire
+			if(Math.random() < ((this.strength / this.habitability) / 20) && this.age > 10) {//drift closer to empire
 				this.avgLocalIdeology(empire.getIdeology(), this.strength / 255);
 			} else if(this.localIdeology && this.age > 10) {//drift away from empire
 				let e = empire.getIdeology();
