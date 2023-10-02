@@ -38,6 +38,7 @@ class GameState extends State {
 			this.habitablePixels = [];
 			this.genTerrain(mapWidth, mapHeight);
 		}
+		
         this.genEmpires(this.numEmpires);
     }
 
@@ -211,6 +212,8 @@ class GameState extends State {
 			p.resourcePhase();
 		}
 	}
+	
+	//await batch.dispatchEvent(strengthPhase)
 
 	shuffleArray(array) {
 		for (let i = array.length - 1; i > 0; i--) {
