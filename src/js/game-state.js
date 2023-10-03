@@ -48,17 +48,20 @@ class GameState extends State {
 	assignPixelsToBatches() {
 		this.batches = [];
 		let numBatches = 8;
+		let batchSize = Math.ceil(this.habitablePixels.length / numBatches); // Calculate the size of each batch
+		console.log("hPixels: " + this.habitablePixels.length);
+		console.log("numBatches: " + numBatches);
+		console.log("batchSize: " + batchSize);
+	
 		for(let i = 0; i < numBatches; i++) {
-			let pa = [];
-			for(let k = 0; k < this.habitablePixels.length / numBatches; k++) {
-				let index = i * (this.habitablePixels.length / numBatches);
-				index += k;
-				pa.push(this.habitablePixels[index]);
-			}
-			this.batches.push(new PixelBatch(pa));
-			console.log(pa.length);
+			this.batches.push(new PixelBatch());
+		}
+	
+		for(let i = 0; i < this.habitablePixels.length; i++) {
+			this.batches[i % numBatches].addPixel(this.habitablePixels[i]);
 		}
 	}
+
 
     genTerrain(width, height) {
         console.log("Generating Terrain");
@@ -213,7 +216,7 @@ class GameState extends State {
 
 
 	tickPixels() {
-		this.shuffleArray(this.habitablePixels);
+		/*this.shuffleArray(this.habitablePixels);
 		for (const p of this.habitablePixels) {
 			p.strengthPhase();
 		}
@@ -228,6 +231,21 @@ class GameState extends State {
 		}
 		for (const p of this.habitablePixels) {
 			p.resourcePhase();
+		}*/
+		for(let b of this.batches) {
+			b.dispatch("strengthPhase");
+		}
+		for(let b of this.batches) {
+			b.dispatch("attackPhase");
+		}
+		for(let b of this.batches) {
+			b.dispatch("needPhase");
+		}
+		for(let b of this.batches) {
+			b.dispatch("needSpreadPhase");
+		}
+		for(let b of this.batches) {
+			b.dispatch("resourcePhase");
 		}
 	}
 	
