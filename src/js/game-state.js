@@ -60,6 +60,10 @@ class GameState extends State {
 		for(let i = 0; i < this.habitablePixels.length; i++) {
 			this.batches[i % numBatches].addPixel(this.habitablePixels[i]);
 		}
+		
+		for(let b of this.batches) {
+			b.shuffleArray();
+		}
 	}
 
 
@@ -215,48 +219,28 @@ class GameState extends State {
 	}
 
 
-	tickPixels() {
-		/*this.shuffleArray(this.habitablePixels);
-		for (const p of this.habitablePixels) {
-			p.strengthPhase();
-		}
-		for (const p of this.habitablePixels) {
-			p.attackPhase();
-		}
-		for (const p of this.habitablePixels) {
-			p.needPhase();
-		}
-		for (const p of this.habitablePixels) {
-			p.needSpreadPhase();
-		}
-		for (const p of this.habitablePixels) {
-			p.resourcePhase();
-		}*/
+	async tickPixels() {
 		for(let b of this.batches) {
-			b.dispatch("strengthPhase");
+			await b.dispatch("strengthPhase");
 		}
 		for(let b of this.batches) {
-			b.dispatch("attackPhase");
+			await b.dispatch("attackPhase");
 		}
 		for(let b of this.batches) {
-			b.dispatch("needPhase");
+			await b.dispatch("needPhase");
 		}
 		for(let b of this.batches) {
-			b.dispatch("needSpreadPhase");
+			await b.dispatch("needSpreadPhase");
 		}
 		for(let b of this.batches) {
-			b.dispatch("resourcePhase");
+			await b.dispatch("resourcePhase");
+		}
+		for(let b of this.batches) {
+			b.shuffleArray();
 		}
 	}
 	
 	//await batch.dispatchEvent(strengthPhase)
-
-	shuffleArray(array) {
-		for (let i = array.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[array[i], array[j]] = [array[j], array[i]];
-		}
-	}
 	
 	getScale() {
 		return this.scale;
