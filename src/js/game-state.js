@@ -7,6 +7,7 @@ import Paratrooper from './entities/paratrooper.js';
 import Empire from './entities/empire.js';
 import TerritoryManager from './utilities/territory-manager.js';
 import PerlinNoiseGenerator from './utilities/perlin-noise-generator.js';
+import PixelBatch from './utilities/pixel-batch.js';
 
 class GameState extends State {
     constructor(game, width, height, scale, numEmpires, warThreshold) {
@@ -40,7 +41,24 @@ class GameState extends State {
 		}
 		
         this.genEmpires(this.numEmpires);
+		
+		this.assignPixelsToBatches();
     }
+	
+	assignPixelsToBatches() {
+		this.batches = [];
+		let numBatches = 8;
+		for(let i = 0; i < numBatches; i++) {
+			let pa = [];
+			for(let k = 0; k < this.habitablePixels.length / numBatches; k++) {
+				let index = i * (this.habitablePixels.length / numBatches);
+				index += k;
+				pa.push(this.habitablePixels[index]);
+			}
+			this.batches.push(new PixelBatch(pa));
+			console.log(pa.length);
+		}
+	}
 
     genTerrain(width, height) {
         console.log("Generating Terrain");

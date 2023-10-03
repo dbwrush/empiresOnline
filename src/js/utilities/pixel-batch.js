@@ -1,6 +1,10 @@
-export default class EmpireNameGenerator {
+export default class PixelBatch {
 	constructor(pixelList) {
 		this.addEventListener("strengthPhase", (event) => event.start());
+		this.addEventListener("attackPhase", (event) => event.start());
+		this.addEventListener("needPhase", (event) => event.start());
+		this.addEventListener("needSpreadPhase", (event) => event.start());
+		this.addEventListener("resourcePhase", (event) => event.start());
 		this.pixelList = pixelList;
     }
 	
@@ -12,29 +16,35 @@ export default class EmpireNameGenerator {
 	  }
 	});
 		
-	attackPhase() {
+	const attackPhase = new CustomEvent("attackPhase", {
+	  start: () => {
 		for(p in this.pixelList) {
 			p.attackPhase();
 		}
-	}
+	  }
+	});
 	
-	needPhase() {
+	const needPhase = new CustomEvent("needPhase", {
+	  start: () => {
 		for(p in this.pixelList) {
 			p.needPhase();
 		}
-	}
+	  }
+	});
 	
-	needSpreadPhase() {
+	const needSpreadPhase = new CustomEvent("needSpreadPhase", {
+	  start: () => {
 		for(p in this.pixelList) {
 			p.needSpreadPhase();
 		}
-	}
+	  }
+	});
 	
-	resourcePhase() {
+	const resourcePhase = new CustomEvent("resourcePhase", {
+	  start: () => {
 		for(p in this.pixelList) {
 			p.resourcePhase();
 		}
-	}
-	
-	
+	  }
+	});
 }
