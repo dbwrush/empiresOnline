@@ -235,9 +235,6 @@ class GameState extends State {
 		for(let b of this.batches) {
 			await b.dispatch("resourcePhase");
 		}
-		for(let b of this.batches) {
-			b.shuffleArray();
-		}
 	}
 	
 	//await batch.dispatchEvent(strengthPhase)
