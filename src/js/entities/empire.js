@@ -10,7 +10,6 @@ export default class Empire {
 
         this.maxSize = 0;
         this.mergeDifficulty = 1000;
-        this.allianceDifficulty = 3;
 
         this.name = EmpireNameGenerator.generateEmpireName();
 
@@ -53,7 +52,7 @@ export default class Empire {
 				this.ideology[0] = 255;
 			}
 		}
-		if(this.getAllies().length > 0 && Math.random() < 0.01) {
+		if(this.getAllies().length > 0 && Math.random() < 0.0001) {
 			let a = this.getAllies()[Math.floor(Math.random(this.getAllies().length))];
 			this.ideology[0] = (this.ideology[0] + this.ideology[0] + a.ideology[0]) / 3;
 			this.ideology[1] = (this.ideology[1] + this.ideology[1] + a.ideology[1]) / 3;
@@ -317,6 +316,6 @@ export default class Empire {
     }
 
     getAllianceDifficulty() {
-        return this.allianceDifficulty;
+        return this.gameState.allianceDifficulty;
     }
 }

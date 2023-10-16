@@ -145,7 +145,7 @@ export default class Pixel {
 				this.setLocalIdeology(empire.getIdeology());
 			}
 			let diff = empire.ideoDifference(this.localIdeology) / 3;
-			if(diff > this.localIdeology[0] && Math.random() * 255 < diff && Math.random() < 0.1 && this.age > 100) {
+			if(diff > this.localIdeology[0] * 2 && Math.random() * 2550 < diff && this.age > 100) {
 				this.revolt(this.localIdeology);
 			}
 			if(this.friendlyNeighbors.length == this.neighbors.length) {
@@ -258,9 +258,9 @@ export default class Pixel {
             if (this.need > 255) {
                 this.need = 255;
             }
-			if(Math.random() < (this.strength / this.habitability) / 10 && this.age > 10) {//drift closer to empire
+			if(Math.random() * 15 < (this.strength / this.habitability) && this.age > 10) {//drift closer to empire
 				this.avgLocalIdeology(empire.getIdeology(), this.strength / 1000);
-			} else if(this.localIdeology && this.age > 10) {//drift away from empire
+			} else if(this.localIdeology) {//drift away from empire
 				let e = empire.getIdeology();
 				let l = this.localIdeology;
 				let diff = [e[0] - l[0], e[1] - l[1], e[2] - e[2]];
@@ -269,7 +269,7 @@ export default class Pixel {
 						diff[i] = (Math.random() - 0.5) * 2;
 					}
 				}
-				let r = Math.random() / 20;
+				let r = Math.random() / 10;
 				this.localIdeology = [l[0] + (r * -diff[0]), l[1] + (r * -diff[1]), l[2] + (r * -diff[2])];
 				this.localIdeology = this.localIdeology.map(value => (value < 0 ? 0 : value > 255 ? 255 : value));
 			}
