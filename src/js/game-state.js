@@ -13,7 +13,7 @@ class GameState extends State {
         super(game);
         console.log("Switched to GameState");
         this.warThreshold = warThreshold;
-		this.allianceDifficulty = 6;
+		this.allianceDifficulty = 5;
         this.scale = scale;
         this.tm = new TerritoryManager();
         this.habitablePixels = [];
@@ -142,8 +142,8 @@ class GameState extends State {
 		if (this.warThreshold > 0 && Math.random() < 0.01) {
 			this.warThreshold -= 1;
 		}
-		if (this.allianceDifficulty < 255 && Math.random() < 0.01) {
-			this.allianceDifficulty += 1;
+		if (this.allianceDifficulty < 255 && Math.random() < 0.0001) {
+			this.allianceDifficulty *= 1.1;
 		}
 		if (!this.tm.getEmpires().includes(this.perspectiveEmpire)) {
 			this.perspectiveEmpire = this.tm.getEmpires()[0];

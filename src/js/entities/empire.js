@@ -52,7 +52,7 @@ export default class Empire {
 				this.ideology[0] = 255;
 			}
 		}
-		if(this.getAllies().length > 0 && Math.random() < 0.0001) {
+		if(this.getAllies().length > 0 && Math.random() < 0.001) {
 			let a = this.getAllies()[Math.floor(Math.random(this.getAllies().length))];
 			this.ideology[0] = (this.ideology[0] + this.ideology[0] + a.ideology[0]) / 3;
 			this.ideology[1] = (this.ideology[1] + this.ideology[1] + a.ideology[1]) / 3;
@@ -169,6 +169,7 @@ export default class Empire {
     getCapital() {
         return this.capital;
     }
+	
 
     removeTerritory(pixel) {
         if (this.gameState.getTerritoryManager().getPixelsForEmpire(this).includes(pixel)) {
@@ -277,6 +278,17 @@ export default class Empire {
         this.allies.push(e);
         e.allies.push(this);
     }
+	
+	breakAlliance(e) {
+		if (e === this) {
+			return;
+		}
+		if (!this.allies.includes(e)) {
+			return;
+		}
+		this.allies = this.allies.filter(ally => ally !== e);
+		e.allies = e.allies.filter(ally => ally !== this);
+	}
 
     ideoDifference(e) {
         let total = 0;

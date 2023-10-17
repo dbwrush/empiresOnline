@@ -28,6 +28,7 @@ export default class Pixel {
         this.gameState = gameState;
         this.strength = habitability * 20;
         this.age = 0;
+		this.famine = 1;
         this.neighbors = null;
         this.friendlyNeighbors = [];
 		
@@ -123,9 +124,15 @@ export default class Pixel {
         }
         let empire = this.getEmpire();
         if (empire) {
-            this.strength += this.habitability;
+            this.strength += this.habitability * this.famine;
             this.strength *= 0.99;
         }
+		if(this.famine < 1) {
+			this.famine = this.famine + (0.01 * Math.random());
+		}
+		if(Math.random() < 0.0001) {
+			this.setFamine(Math.random());
+		}
 		if (Math.random() < 0.01) {
 			this.spawnBoat();
 		}
@@ -136,6 +143,24 @@ export default class Pixel {
 			this.spawnParatrooper();
 		}
     }
+	
+	setFamine(f) {
+		this.famine = (this.famine + 3 * f) / 4;
+		if(f < 0.5) {
+			this.recurFamine((this.famine + 3 * f) / 4);
+		}
+	}
+	
+	recurFamine(f) {
+		if(this.neighbors) {
+			for(let p of this.neighbors) {
+				if (p.famine > 0.5 && Math.random() < 0.3) {
+					p.setFamine(f);
+				}
+			}
+		}
+
+	}
 
     attackPhase() {
         this.borderFriction = 0;
@@ -169,6 +194,9 @@ export default class Pixel {
                             let coopIso = Math.min(empire.getCoopIso(), pEmpire.getCoopIso());
 							if(empire.getAllies().includes(pEmpire)) {
 								this.borderFriction += (Math.abs(this.strength - p.getStrength()) / 5) * ((255 - empire.getCoopIso()) / 255);
+								if(ideoDiff * empire.getAllianceDifficulty() > coopIso) {
+									empire.breakAlliance(pEmpire);
+								}
 							} else if(empire.getEnemies().includes(pEmpire)) {
 								if ((ideoDiff + (this.borderFriction / 5)) < this.gameState.getWarThreshold()) {
 									empire.makePeace(pEmpire);
@@ -177,11 +205,11 @@ export default class Pixel {
 								}
 							} else {
 								this.borderFriction += Math.abs(this.strength - p.getStrength()) * ((255 - empire.getCoopIso()) / 255);
-								if(ideoDiff * empire.getAllianceDifficulty() < coopIso) {
+								if(ideoDiff * empire.getAllianceDifficulty() < 100 + coopIso / 2) {
 									empire.setAlly(pEmpire);
-								} else if(this.borderFriction > this.gameState.getWarThreshold() && coopIso < ideoDiff * 0.33 * Math.random()) {
+								} else if((this.borderFriction) / this.famine > this.gameState.getWarThreshold() && coopIso < ideoDiff * 0.33 * Math.random()) {
 									empire.setEnemy(pEmpire, true, true);
-								} else if(ideoDiff * empire.getAllianceDifficulty() < coopIso * 2) {
+								} else if(ideoDiff * empire.getAllianceDifficulty() < (100 + coopIso / 2) / 2) {
 									empire.breakAlliance(pEmpire);
 								}
 							}
@@ -430,7 +458,8 @@ export default class Pixel {
                 if (this.habitability === 0) {
                     return 'rgb(0, 0, 100)';
                 }
-                return `rgb(0, ${this.habitability * 200}, 0)`;
+				let habitability = (this.habitability * 200) * this.famine;
+                return `rgb(0, ${habitability}, 0)`;
 			case 'stability':
 				if(empire) {
                     let hue = empire.getColor()[0];
