@@ -192,7 +192,7 @@ export default class Pixel {
                         if (pEmpire !== empire) {
 							let ideoDiff = empire.ideoDifference(pEmpire.getIdeology());
                             let coopIso = Math.min(empire.getCoopIso(), pEmpire.getCoopIso());
-							if(empire.getAllies().includes(pEmpire)) {
+							if(empire.alliance && empire.alliance.getAllies().includes(pEmpire)) {
 								this.borderFriction += (Math.abs(this.strength - p.getStrength()) / 5) * ((255 - empire.getCoopIso()) / 255);
 								if(ideoDiff * empire.getAllianceDifficulty() > coopIso) {
 									empire.breakAlliance(pEmpire);
@@ -266,7 +266,7 @@ export default class Pixel {
         let empire = this.getEmpire();
         if (empire) {
             for (let p of this.neighbors) {
-                if (p.getEmpire() === empire || empire.getAllies().includes(p.getEmpire())) {
+                if (p.getEmpire() === empire || (empire.alliance && empire.alliance.getAllies().includes(p.getEmpire()))) {
                     this.friendlyNeighbors.push(p);
                 } else {
                     if (p.isHabitable()) {
@@ -286,8 +286,8 @@ export default class Pixel {
             if (this.need > 255) {
                 this.need = 255;
             }
-			if(Math.random() * 15 < (this.strength / this.habitability) && this.age > 10) {//drift closer to empire
-				this.avgLocalIdeology(empire.getIdeology(), this.strength / 1000);
+			if(Math.random() < (this.strength / this.habitability) && this.age > 10) {//drift closer to empire
+				this.avgLocalIdeology(empire.getIdeology(), this.strength / 1);
 			} else if(this.localIdeology) {//drift away from empire
 				let e = empire.getIdeology();
 				let l = this.localIdeology;
@@ -297,7 +297,7 @@ export default class Pixel {
 						diff[i] = (Math.random() - 0.5) * 2;
 					}
 				}
-				let r = Math.random() / 10;
+				let r = Math.random() / 1000;
 				this.localIdeology = [l[0] + (r * -diff[0]), l[1] + (r * -diff[1]), l[2] + (r * -diff[2])];
 				this.localIdeology = this.localIdeology.map(value => (value < 0 ? 0 : value > 255 ? 255 : value));
 			}
@@ -427,23 +427,31 @@ export default class Pixel {
                 }
             case 'alliance':
                 if (empire) {
-					let hue = empire.getColor()[0];
-                    let saturation = empire.getColor()[1];
-                    let brightness = this.friendlyNeighbors.length / 8;
-                    return `hsl(${hue}, ${saturation}%, ${brightness * 50}%)`;
+					if(empire.alliance) {
+						let hue = empire.alliance.getColor()[0];
+						let saturation = empire.alliance.getColor()[1];
+						let brightness = this.friendlyNeighbors.length / 8;
+						return `hsl(${hue}, ${saturation}%, ${brightness * 50}%)`;
+					} else {
+						let hue = empire.getColor()[0];
+						let saturation = empire.getColor()[1];
+						let brightness = this.friendlyNeighbors.length / 8;
+						return `hsl(${hue}, ${saturation}%, ${brightness * 50}%)`;
+					}
                 }
             case 'perspective':
                 if (empire) {
-                    let r = (8 - this.friendlyNeighbors.length) * 255;
+                    let r = (8 - this.friendlyNeighbors.length) * 31;
+					let p = this.gameState.getPerspectiveEmpire();
                     let g = 255 - (empire.ideoDifference(this.gameState.getPerspectiveEmpire().getIdeology()) / 3);
-                    let base = `rgb(${r / 8}, ${g / 8}, 0)`;
-                    if (this.gameState.getPerspectiveEmpire() === empire) {
+                    return `rgb(${r}, ${g}, 0)`;
+                    /*if (p === empire) {
                         return 'rgb(255, 255, 0)';
                     }
-                    if (this.gameState.getPerspectiveEmpire().getEnemies().includes(empire)) {
+                    if (p.getEnemies().includes(empire)) {
                         return 'rgb(255, 0, 0)';
                     }
-                    if (this.gameState.getPerspectiveEmpire().getAllies().includes(empire)) {
+                    if (p.alliance && p.alliance.getAllies().includes(empire)) {
                         return 'rgb(0, 255, 255)';
                     }
 					// Remove "rgb(" and ")" from the string
@@ -452,7 +460,7 @@ export default class Pixel {
 					// Split the remaining string by comma and convert the values to numbers
 					let [red, green, blue] = rgbValues.split(',').map(value => parseInt(value));
                     let baseColor = [(red + r) / 2, (green + g) / 2, blue];
-                    return `rgb(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]})`;
+                    return `rgb(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]})`;*/
                 }
             case 'habitability':
                 if (this.habitability === 0) {
