@@ -13,7 +13,7 @@ class GameState extends State {
         super(game);
         console.log("Switched to GameState");
         this.warThreshold = warThreshold;
-		this.allianceDifficulty = 5;
+		this.allianceDifficulty = 2;
         this.scale = scale;
         this.tm = new TerritoryManager();
         this.habitablePixels = [];
